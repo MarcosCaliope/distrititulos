@@ -1,0 +1,59 @@
+<%= form_with model: devedor do |f| %>
+  <% if devedor.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(devedor.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% devedor.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :tipo_doc, "Tipo de documento", class: "form-label" %>
+    <%= f.text_field :tipo_doc, maxlength: 3, readonly: devedor.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cpf_cgc, "CPF/CNPJ", class: "form-label" %>
+    <%= f.text_field :cpf_cgc, maxlength: 14, readonly: devedor.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :nome, class: "form-label" %>
+    <%= f.text_field :nome, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :endereco, "Endereço", class: "form-label" %>
+    <%= f.text_field :endereco, maxlength: 35, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sbairro, "Bairro", class: "form-label" %>
+    <%= f.text_field :sbairro, maxlength: 20, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cep, "CEP", class: "form-label" %>
+    <%= f.text_field :cep, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :qtd_tit, "Quantidade de títulos", class: "form-label" %>
+    <%= f.number_field :qtd_tit, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :numero_ok, class: "form-label" %>
+    <%= f.text_field :numero_ok, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :obs, "Observação", class: "form-label" %>
+    <%= f.text_field :obs, maxlength: 35, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

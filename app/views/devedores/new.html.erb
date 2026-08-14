@@ -1,0 +1,6 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Novo devedor</h1>
+  <%= link_to "Voltar", devedores_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<%= render "form", devedor: @devedor %>
