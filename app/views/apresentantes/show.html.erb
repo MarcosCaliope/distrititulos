@@ -1,0 +1,20 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0"><%= @apresentante.nome %></h1>
+  <div>
+    <%= link_to "Editar", edit_apresentante_path(@apresentante), class: "btn btn-primary" %>
+    <%= link_to "Voltar", apresentantes_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Código:</strong> <%= @apresentante.codigo %></li>
+    <li class="list-group-item"><strong>Endereço:</strong> <%= @apresentante.endereco %></li>
+    <li class="list-group-item"><strong>Fone:</strong> <%= @apresentante.fone %></li>
+    <li class="list-group-item"><strong>Contato:</strong> <%= @apresentante.contato %></li>
+    <li class="list-group-item"><strong>Agência:</strong> <%= @apresentante.agencia %></li>
+    <li class="list-group-item"><strong>Tipo:</strong> <%= @apresentante.tipo %></li>
+    <li class="list-group-item"><strong>Convênio:</strong> <%= @apresentante.convenio %></li>
+    <li class="list-group-item"><strong>Custa antecipada:</strong> <%= @apresentante.scustaantecipada %></li>
+  </ul>
+</div>

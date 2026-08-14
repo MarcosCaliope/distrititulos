@@ -1,0 +1,27 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0"><%= @banco.banco %></h1>
+  <div>
+    <%= link_to "Editar", edit_banco_path(@banco), class: "btn btn-primary" %>
+    <%= link_to "Voltar", bancos_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Código:</strong> <%= @banco.codigo %></li>
+    <li class="list-group-item"><strong>Data:</strong> <%= @banco.data %></li>
+    <li class="list-group-item"><strong>Seq:</strong> <%= @banco.seq %></li>
+    <li class="list-group-item"><strong>CD2:</strong> <%= @banco.cd2 %></li>
+    <li class="list-group-item"><strong>Sq título:</strong> <%= @banco.sq_titulo %></li>
+    <li class="list-group-item"><strong>Depósito:</strong> <%= @banco.deposito %></li>
+    <li class="list-group-item"><strong>Vcusta:</strong> <%= @banco.vcusta %></li>
+    <li class="list-group-item"><strong>BC proce:</strong> <%= @banco.bc_proce %></li>
+    <li class="list-group-item"><strong>Qtd título:</strong> <%= @banco.qtd_tit %></li>
+    <li class="list-group-item"><strong>Email:</strong> <%= @banco.email %></li>
+    <li class="list-group-item"><strong>To:</strong> <%= @banco.to %></li>
+    <li class="list-group-item"><strong>E-banco:</strong> <%= @banco.ebanco %></li>
+    <li class="list-group-item"><strong>Código alfa:</strong> <%= @banco.codalfa %></li>
+    <li class="list-group-item"><strong>Bngera:</strong> <%= @banco.bngera %></li>
+    <li class="list-group-item"><strong>Iseqconf:</strong> <%= @banco.iseqconf %></li>
+  </ul>
+</div>

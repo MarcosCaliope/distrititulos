@@ -1,0 +1,59 @@
+<%= form_with model: apresentante do |f| %>
+  <% if apresentante.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(apresentante.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% apresentante.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :codigo, class: "form-label" %>
+    <%= f.text_field :codigo, maxlength: 6, readonly: apresentante.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :nome, class: "form-label" %>
+    <%= f.text_field :nome, maxlength: 30, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :endereco, "Endereço", class: "form-label" %>
+    <%= f.text_field :endereco, maxlength: 30, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :fone, class: "form-label" %>
+    <%= f.text_field :fone, maxlength: 20, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :contato, class: "form-label" %>
+    <%= f.text_field :contato, maxlength: 40, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :agencia, class: "form-label" %>
+    <%= f.text_field :agencia, maxlength: 20, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :tipo, class: "form-label" %>
+    <%= f.text_field :tipo, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :convenio, class: "form-label" %>
+    <%= f.text_field :convenio, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scustaantecipada, "Custa antecipada", class: "form-label" %>
+    <%= f.text_field :scustaantecipada, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

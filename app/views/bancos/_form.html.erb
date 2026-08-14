@@ -1,0 +1,94 @@
+<%= form_with model: banco do |f| %>
+  <% if banco.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(banco.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% banco.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :codigo, class: "form-label" %>
+    <%= f.text_field :codigo, maxlength: 6, readonly: banco.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :banco, class: "form-label" %>
+    <%= f.text_field :banco, maxlength: 30, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :data, class: "form-label" %>
+    <%= f.datetime_field :data, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :seq, class: "form-label" %>
+    <%= f.number_field :seq, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cd2, class: "form-label" %>
+    <%= f.text_field :cd2, maxlength: 6, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sq_titulo, "Sq título", class: "form-label" %>
+    <%= f.number_field :sq_titulo, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :deposito, "Depósito", class: "form-label" %>
+    <%= f.text_field :deposito, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :vcusta, class: "form-label" %>
+    <%= f.text_field :vcusta, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :bc_proce, "BC proce", class: "form-label" %>
+    <%= f.text_field :bc_proce, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :qtd_tit, "Qtd título", class: "form-label" %>
+    <%= f.number_field :qtd_tit, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :email, class: "form-label" %>
+    <%= f.text_field :email, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :to, class: "form-label" %>
+    <%= f.text_field :to, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ebanco, "E-banco", class: "form-label" %>
+    <%= f.text_field :ebanco, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :codalfa, "Código alfa", class: "form-label" %>
+    <%= f.text_field :codalfa, maxlength: 6, class: "form-control" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= f.check_box :bngera, class: "form-check-input" %>
+    <%= f.label :bngera, class: "form-check-label" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :iseqconf, class: "form-label" %>
+    <%= f.number_field :iseqconf, step: "any", class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>
