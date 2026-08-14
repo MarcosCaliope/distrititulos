@@ -1,0 +1,19 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0"><%= @devedor.nome %></h1>
+  <div>
+    <%= link_to "Editar", edit_devedor_path(@devedor), class: "btn btn-primary" %>
+    <%= link_to "Voltar", devedores_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Tipo de documento:</strong> <%= @devedor.tipo_doc %></li>
+    <li class="list-group-item"><strong>CPF/CNPJ:</strong> <%= @devedor.cpf_cgc %></li>
+    <li class="list-group-item"><strong>Endereço:</strong> <%= @devedor.endereco %></li>
+    <li class="list-group-item"><strong>Bairro:</strong> <%= @devedor.sbairro %></li>
+    <li class="list-group-item"><strong>CEP:</strong> <%= @devedor.cep %></li>
+    <li class="list-group-item"><strong>Quantidade de títulos:</strong> <%= @devedor.qtd_tit %></li>
+    <li class="list-group-item"><strong>Observação:</strong> <%= @devedor.obs %></li>
+  </ul>
+</div>
