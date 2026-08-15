@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   resources :especies
   resources :faixas
   resources :protestos
+  resources :tipo_docs
+  resources :tipo_tits
 
   # Defines the root path route ("/")
   root "home#index"

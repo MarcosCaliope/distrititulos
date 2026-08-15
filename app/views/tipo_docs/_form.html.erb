@@ -1,0 +1,24 @@
+<%= form_with model: tipo_doc do |f| %>
+  <% if tipo_doc.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(tipo_doc.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% tipo_doc.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :tipo_doc, "Código", class: "form-label" %>
+    <%= f.text_field :tipo_doc, maxlength: 3, readonly: tipo_doc.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :descricao, "Descrição", class: "form-label" %>
+    <%= f.text_field :descricao, maxlength: 20, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

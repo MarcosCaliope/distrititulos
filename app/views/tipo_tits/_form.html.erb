@@ -1,0 +1,29 @@
+<%= form_with model: tipo_tit do |f| %>
+  <% if tipo_tit.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(tipo_tit.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% tipo_tit.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :codigo, class: "form-label" %>
+    <%= f.text_field :codigo, maxlength: 2, readonly: tipo_tit.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :descricao, "Descrição", class: "form-label" %>
+    <%= f.text_field :descricao, maxlength: 30, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :abrevia, "Abreviação", class: "form-label" %>
+    <%= f.text_field :abrevia, maxlength: 3, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>
