@@ -1,0 +1,15 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0"><%= @distribuidor.dis_cartorio %></h1>
+  <div>
+    <%= link_to "Editar", edit_distribuidor_path(@distribuidor), class: "btn btn-primary" %>
+    <%= link_to "Voltar", distribuidores_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>ID:</strong> <%= @distribuidor.dis_id %></li>
+    <li class="list-group-item"><strong>Cartório:</strong> <%= @distribuidor.dis_cartorio %></li>
+    <li class="list-group-item"><strong>Livre:</strong> <%= @distribuidor.blivre ? "Sim" : "Não" %></li>
+  </ul>
+</div>

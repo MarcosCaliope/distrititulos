@@ -1,0 +1,29 @@
+<%= form_with model: distribuidor do |f| %>
+  <% if distribuidor.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(distribuidor.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% distribuidor.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :dis_id, "ID", class: "form-label" %>
+    <%= f.text_field :dis_id, maxlength: 1, readonly: distribuidor.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :dis_cartorio, "Cartório", class: "form-label" %>
+    <%= f.text_field :dis_cartorio, maxlength: 40, class: "form-control" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= f.check_box :blivre, class: "form-check-input" %>
+    <%= f.label :blivre, "Livre", class: "form-check-label" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>
