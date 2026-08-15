@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Excluir remessas por ano</h1>
+  <%= link_to "Voltar", remessas_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<p class="text-muted">
+  Remove todas as remessas com data até 31/12 do ano escolhido (inclui o ano escolhido e todos os anteriores).
+  Ação irreversível.
+</p>
+
+<%= form_with url: purge_remessas_path, method: :get, class: "row g-2 mb-4" do %>
+  <div class="col-auto">
+    <%= label_tag :ano, "Ano", class: "visually-hidden" %>
+    <%= number_field_tag :ano, @ano, placeholder: "Ano", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= submit_tag "Consultar", class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
+
+<% if @count %>
+  <div class="alert alert-warning">
+    <strong><%= @count %></strong> remessa(s) serão apagadas (data até 31/12/<%= @ano %>).
+  </div>
+
+  <% if @count.positive? %>
+    <%= form_with url: purge_remessas_path, method: :delete do |f| %>
+      <%= f.hidden_field :ano, value: @ano %>
+      <div class="mb-3">
+        <%= label_tag :confirm_ano, "Digite #{@ano} novamente para confirmar", class: "form-label" %>
+        <%= number_field_tag :confirm_ano, nil, class: "form-control", style: "max-width: 200px" %>
+      </div>
+      <%= f.submit "Confirmar exclusão de #{@count} remessa(s)", class: "btn btn-danger", data: { turbo_confirm: "Tem certeza? Isso vai apagar #{@count} remessa(s) de #{@ano} e anos anteriores. Essa ação não pode ser desfeita." } %>
+    <% end %>
+  <% end %>
+<% end %>

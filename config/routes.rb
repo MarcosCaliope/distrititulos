@@ -22,7 +22,12 @@ Rails.application.routes.draw do
   resources :titulos
   resources :atos
   resources :feriados
-  resources :remessas, constraints: { id: /.+/ }
+  resources :remessas, constraints: { id: /.+/ } do
+    collection do
+      get :purge
+      delete :purge
+    end
+  end
 
   # Defines the root path route ("/")
   root "home#index"

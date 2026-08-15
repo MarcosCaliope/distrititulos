@@ -46,7 +46,31 @@ class RemessasController < ApplicationController
     redirect_to remessas_path, notice: "Remessa removida."
   end
 
+  # Bulk-deletes remessas from a given year and every year before it.
+  # GET previews how many rows match; DELETE only executes after the same
+  # year is typed again as confirmation, since this can remove hundreds of
+  # thousands of rows at once and can't be undone.
+  def purge
+    @ano = params[:ano].presence&.to_i
+    @count = purge_scope(@ano).count if @ano.present?
+
+    return unless request.delete?
+
+    if @ano.blank? || params[:confirm_ano].to_i != @ano
+      flash.now[:alert] = "Digite o mesmo ano para confirmar a exclusão."
+      render :purge, status: :unprocessable_entity
+      return
+    end
+
+    deleted = purge_scope(@ano).delete_all
+    redirect_to remessas_path, notice: "#{deleted} remessa(s) de #{@ano} e anos anteriores removida(s)."
+  end
+
   private
+
+  def purge_scope(ano)
+    Remessa.where(datarem: ..Date.new(ano, 12, 31))
+  end
 
   def set_remessa
     @remessa = Remessa.find(params[:id].split(Remessa.param_delimiter, 3))
