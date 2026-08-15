@@ -54,6 +54,9 @@ end
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Load CENTRAL_DB_* connection settings from .env.development
+  gem "dotenv-rails"
 end
 
 group :test do
