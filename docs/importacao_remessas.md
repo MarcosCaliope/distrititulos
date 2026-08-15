@@ -87,7 +87,9 @@ devedor zerado (50) ou igual ao do credor (7) · [só linha titular] praça/cida
 diferente de "FORTALEZA" — exceto apresentante `073` (15) · [só linha titular] falência em
 CPF (50). Se **várias** regras falharem no mesmo título, só o código da **última** que falhou
 fica gravado (mesmo comportamento do VB original) — mas todas geram uma linha no log.
-Descrições oficiais desses códigos: tabela `distribuidor.irregularidades`.
+Descrições oficiais desses códigos: tabela própria `irregularidades` (não a
+`distribuidor.irregularidades`, que pertence a outra aplicação — copiamos os 70 códigos de
+lá uma única vez para termos uma tabela independente).
 
 Dígito verificador de CPF/CNPJ: o código-fonte original (`DVCPF`/`DVCGC`) não estava no
 projeto exportado, então usei os algoritmos padrão nacionais.

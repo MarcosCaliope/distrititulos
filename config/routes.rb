@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   resources :titulos
   resources :atos
   resources :feriados
+  resources :irregularidades
   resources :remessas, constraints: { id: /.+/ } do
     collection do
       get :purge
