@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Devedor solidário <%= @devedor_solidario.protocolo %></h1>
+  <div>
+    <%= link_to "Editar", edit_devedor_solidario_path(@devedor_solidario), class: "btn btn-primary" %>
+    <%= link_to "Voltar", devedor_solidarios_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Tipo de documento:</strong> <%= @devedor_solidario.tipo_doc %></li>
+    <li class="list-group-item"><strong>CPF/CNPJ:</strong> <%= @devedor_solidario.cpf_cgc %></li>
+    <li class="list-group-item"><strong>Protocolo:</strong> <%= @devedor_solidario.protocolo %></li>
+    <li class="list-group-item"><strong>Número do título:</strong> <%= @devedor_solidario.snumtitulo %></li>
+    <li class="list-group-item"><strong>Nosso número:</strong> <%= @devedor_solidario.snossonumero %></li>
+    <li class="list-group-item"><strong>Espécie:</strong> <%= @devedor_solidario.especie %></li>
+    <li class="list-group-item"><strong>Arquivo texto:</strong> <%= @devedor_solidario.snomearquivotexto %></li>
+    <li class="list-group-item"><strong>ISQL:</strong> <%= @devedor_solidario.isql %></li>
+    <li class="list-group-item"><strong>Registro:</strong> <div class="text-break"><%= @devedor_solidario.sregistro %></div></li>
+  </ul>
+</div>

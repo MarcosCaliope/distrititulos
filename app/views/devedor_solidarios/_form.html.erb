@@ -1,0 +1,59 @@
+<%= form_with model: devedor_solidario do |f| %>
+  <% if devedor_solidario.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(devedor_solidario.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% devedor_solidario.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :tipo_doc, "Tipo de documento", class: "form-label" %>
+    <%= f.text_field :tipo_doc, maxlength: 3, readonly: devedor_solidario.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cpf_cgc, "CPF/CNPJ", class: "form-label" %>
+    <%= f.text_field :cpf_cgc, maxlength: 14, readonly: devedor_solidario.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :protocolo, class: "form-label" %>
+    <%= f.text_field :protocolo, maxlength: 10, readonly: devedor_solidario.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :snumtitulo, "Número do título", class: "form-label" %>
+    <%= f.text_field :snumtitulo, maxlength: 11, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :snossonumero, "Nosso número", class: "form-label" %>
+    <%= f.text_field :snossonumero, maxlength: 15, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :especie, "Espécie", class: "form-label" %>
+    <%= f.text_field :especie, maxlength: 3, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :snomearquivotexto, "Arquivo texto", class: "form-label" %>
+    <%= f.text_field :snomearquivotexto, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :isql, class: "form-label" %>
+    <%= f.number_field :isql, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sregistro, "Registro", class: "form-label" %>
+    <%= f.text_area :sregistro, maxlength: 650, rows: 4, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>
