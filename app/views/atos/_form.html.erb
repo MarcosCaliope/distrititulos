@@ -1,0 +1,54 @@
+<%= form_with model: ato do |f| %>
+  <% if ato.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(ato.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% ato.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :icodato, "Código", class: "form-label" %>
+    <%= f.number_field :icodato, readonly: ato.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ano, "Ano", class: "form-label" %>
+    <%= f.text_field :ano, maxlength: 4, readonly: ato.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cemolumento, "Emolumento", class: "form-label" %>
+    <%= f.text_field :cemolumento, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cfermoju, "Fermoju", class: "form-label" %>
+    <%= f.text_field :cfermoju, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cselo, "Selo", class: "form-label" %>
+    <%= f.text_field :cselo, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ciss, "ISS", class: "form-label" %>
+    <%= f.text_field :ciss, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cfaadep, "FAADEP", class: "form-label" %>
+    <%= f.text_field :cfaadep, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cfrmp, "FRMP", class: "form-label" %>
+    <%= f.text_field :cfrmp, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

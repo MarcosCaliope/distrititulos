@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :tipo_docs
   resources :tipo_tits
   resources :titulos
+  resources :atos
 
   # Defines the root path route ("/")
   root "home#index"
