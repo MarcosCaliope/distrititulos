@@ -4,7 +4,7 @@ class BancosController < ApplicationController
   def index
     @bancos = Banco.order(:banco).limit(50)
     if params[:q].present?
-      @bancos = @bancos.where("banco ILIKE :q OR codigo ILIKE :q", q: "%#{params[:q]}%")
+      @bancos = @bancos.where("banco ILIKE :q OR codigo ILIKE :q OR cd2 ILIKE :q", q: "%#{params[:q]}%")
     end
   end
 

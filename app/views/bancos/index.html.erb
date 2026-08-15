@@ -5,7 +5,7 @@
 
 <%= form_with url: bancos_path, method: :get, class: "row g-2 mb-4" do %>
   <div class="col-auto">
-    <%= text_field_tag :q, params[:q], placeholder: "Buscar por código ou nome", class: "form-control" %>
+    <%= text_field_tag :q, params[:q], placeholder: "Buscar por código, CD2 ou nome", class: "form-control" %>
   </div>
   <div class="col-auto">
     <%= submit_tag "Buscar", class: "btn btn-outline-secondary" %>
