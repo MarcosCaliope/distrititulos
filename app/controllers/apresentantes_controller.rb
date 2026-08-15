@@ -4,7 +4,7 @@ class ApresentantesController < ApplicationController
   def index
     @apresentantes = Apresentante.order(:nome).limit(50)
     if params[:q].present?
-      @apresentantes = @apresentantes.where("nome ILIKE :q OR codigo ILIKE :q", q: "%#{params[:q]}%")
+      @apresentantes = @apresentantes.where("nome ILIKE :q OR codigo ILIKE :q OR scodcompensacao ILIKE :q", q: "%#{params[:q]}%")
     end
   end
 

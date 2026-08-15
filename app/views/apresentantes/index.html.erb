@@ -5,7 +5,7 @@
 
 <%= form_with url: apresentantes_path, method: :get, class: "row g-2 mb-4" do %>
   <div class="col-auto">
-    <%= text_field_tag :q, params[:q], placeholder: "Buscar por código ou nome", class: "form-control" %>
+    <%= text_field_tag :q, params[:q], placeholder: "Buscar por código, código de compensação ou nome", class: "form-control" %>
   </div>
   <div class="col-auto">
     <%= submit_tag "Buscar", class: "btn btn-outline-secondary" %>
@@ -17,9 +17,12 @@
     <thead>
       <tr>
         <th>Código</th>
+        <th>Cód. compensação</th>
         <th>Nome</th>
         <th>Contato</th>
         <th>Fone</th>
+        <th>CRA</th>
+        <th>CENPROT</th>
         <th class="text-end">Ações</th>
       </tr>
     </thead>
@@ -27,9 +30,12 @@
       <% @apresentantes.each do |apresentante| %>
         <tr>
           <td><%= apresentante.codigo %></td>
+          <td><%= apresentante.scodcompensacao %></td>
           <td><%= link_to apresentante.nome, apresentante %></td>
           <td><%= apresentante.contato %></td>
           <td><%= apresentante.fone %></td>
+          <td><%= apresentante.bcra ? "Sim" : "Não" %></td>
+          <td><%= apresentante.bcenprot ? "Sim" : "Não" %></td>
           <td class="text-end">
             <%= link_to "Editar", edit_apresentante_path(apresentante), class: "btn btn-sm btn-outline-secondary" %>
             <%= link_to "Remover", apresentante, data: { turbo_method: :delete, turbo_confirm: "Remover #{apresentante.nome}?" }, class: "btn btn-sm btn-outline-danger" %>
