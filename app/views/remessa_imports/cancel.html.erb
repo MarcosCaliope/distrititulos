@@ -1,0 +1,38 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Cancelar importação de remessa</h1>
+  <%= link_to "Voltar", new_remessa_import_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<p class="text-muted">
+  Remove os títulos, devedores solidários e o registro de remessa gravados a partir de um
+  arquivo específico (pelo nome exato do arquivo). Ação irreversível.
+</p>
+
+<%= form_with url: cancel_remessa_imports_path, method: :get, class: "row g-2 mb-4" do %>
+  <div class="col-auto">
+    <%= label_tag :filename, "Nome do arquivo", class: "visually-hidden" %>
+    <%= text_field_tag :filename, @filename, placeholder: "Nome do arquivo de remessa", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= submit_tag "Consultar", class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
+
+<% if @filename %>
+  <div class="alert alert-warning">
+    <strong><%= @titulos_count %></strong> título(s), <strong><%= @remessas_count %></strong>
+    registro(s) de remessa e <strong><%= @devedor_solidarios_count %></strong> devedor(es)
+    solidário(s) serão apagados para o arquivo "<%= @filename %>".
+  </div>
+
+  <% if @titulos_count.positive? || @remessas_count.positive? || @devedor_solidarios_count.positive? %>
+    <%= form_with url: cancel_remessa_imports_path, method: :delete do |f| %>
+      <%= f.hidden_field :filename, value: @filename %>
+      <div class="mb-3">
+        <%= label_tag :confirm_filename, "Digite \"#{@filename}\" novamente para confirmar", class: "form-label" %>
+        <%= text_field_tag :confirm_filename, nil, class: "form-control" %>
+      </div>
+      <%= f.submit "Confirmar cancelamento da importação", class: "btn btn-danger", data: { turbo_confirm: "Tem certeza? Isso vai apagar #{@titulos_count} título(s) do arquivo #{@filename}. Essa ação não pode ser desfeita." } %>
+    <% end %>
+  <% end %>
+<% end %>

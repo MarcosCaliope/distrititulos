@@ -1,0 +1,16 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Importar remessa</h1>
+  <div>
+    <%= link_to "Cancelar uma importação", cancel_remessa_imports_path, class: "btn btn-outline-danger" %>
+    <%= link_to "Voltar", remessas_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<%= form_with url: remessa_imports_path, method: :post, multipart: true do %>
+  <div class="mb-3">
+    <%= label_tag :file, "Arquivo de remessa", class: "form-label" %>
+    <%= file_field_tag :file, class: "form-control" %>
+  </div>
+
+  <%= submit_tag "Importar", class: "btn btn-primary" %>
+<% end %>

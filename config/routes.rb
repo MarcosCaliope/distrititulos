@@ -28,6 +28,12 @@ Rails.application.routes.draw do
       delete :purge
     end
   end
+  resources :remessa_imports, only: %i[new create] do
+    collection do
+      get :cancel
+      delete :cancel
+    end
+  end
 
   # Defines the root path route ("/")
   root "home#index"

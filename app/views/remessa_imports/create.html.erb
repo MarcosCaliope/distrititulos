@@ -1,0 +1,19 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Importação de <%= @filename %></h1>
+  <%= link_to "Nova importação", new_remessa_import_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<% if @result.success? %>
+  <div class="alert alert-success">
+    Importação concluída com sucesso. <%= @result.titulos_count %> título(s) importado(s).
+  </div>
+<% else %>
+  <div class="alert alert-danger">
+    Importação falhou. Nenhum dado foi gravado. Veja o log abaixo.
+  </div>
+<% end %>
+
+<div class="card">
+  <div class="card-header">Log de Importação</div>
+  <pre class="card-body mb-0" style="white-space: pre-wrap;"><%= @result.log.join("\n") %></pre>
+</div>
