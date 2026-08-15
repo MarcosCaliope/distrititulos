@@ -1,0 +1,20 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Remessa <%= @remessa.codapr %>/<%= @remessa.isql %></h1>
+  <div>
+    <%= link_to "Editar", edit_remessa_path(@remessa), class: "btn btn-primary" %>
+    <%= link_to "Voltar", remessas_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Código apresentante:</strong> <%= @remessa.codapr %></li>
+    <li class="list-group-item"><strong>Arquivo texto:</strong> <%= @remessa.snomearquivotexto %></li>
+    <li class="list-group-item"><strong>ISQL:</strong> <%= @remessa.isql %></li>
+    <li class="list-group-item"><strong>Data remessa:</strong> <%= @remessa.datarem %></li>
+    <li class="list-group-item"><strong>Situação:</strong> <%= @remessa.situacao %></li>
+    <li class="list-group-item"><strong>Código irregularidade:</strong> <%= @remessa.icodirreg %></li>
+    <li class="list-group-item"><strong>Tipo título:</strong> <%= @remessa.tipo_tit %></li>
+    <li class="list-group-item"><strong>Registro:</strong> <div class="text-break"><%= @remessa.sregistro %></div></li>
+  </ul>
+</div>

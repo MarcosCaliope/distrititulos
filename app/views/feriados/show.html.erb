@@ -1,0 +1,14 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0"><%= @feriado.sdescricao %></h1>
+  <div>
+    <%= link_to "Editar", edit_feriado_path(@feriado), class: "btn btn-primary" %>
+    <%= link_to "Voltar", feriados_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Data:</strong> <%= @feriado.dtferiado %></li>
+    <li class="list-group-item"><strong>Descrição:</strong> <%= @feriado.sdescricao %></li>
+  </ul>
+</div>

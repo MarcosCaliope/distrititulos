@@ -1,0 +1,54 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Remessas</h1>
+  <%= link_to "Nova remessa", new_remessa_path, class: "btn btn-primary" %>
+</div>
+
+<%= form_with url: remessas_path, method: :get, class: "row g-2 mb-4" do %>
+  <div class="col-auto">
+    <%= text_field_tag :codapr, params[:codapr], placeholder: "Código apresentante", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= text_field_tag :snomearquivotexto, params[:snomearquivotexto], placeholder: "Arquivo texto", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= label_tag :datarem, "Data da remessa", class: "visually-hidden" %>
+    <%= date_field_tag :datarem, params[:datarem], class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= submit_tag "Buscar", class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Código apresentante</th>
+        <th>Arquivo texto</th>
+        <th>ISQL</th>
+        <th>Data remessa</th>
+        <th>Situação</th>
+        <th>Tipo título</th>
+        <th class="text-end">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @remessas.each do |remessa| %>
+        <tr>
+          <td><%= link_to remessa.codapr, remessa %></td>
+          <td><%= remessa.snomearquivotexto %></td>
+          <td><%= remessa.isql %></td>
+          <td><%= remessa.datarem %></td>
+          <td><%= remessa.situacao %></td>
+          <td><%= remessa.tipo_tit %></td>
+          <td class="text-end">
+            <%= link_to "Editar", edit_remessa_path(remessa), class: "btn btn-sm btn-outline-secondary" %>
+            <%= link_to "Remover", remessa, data: { turbo_method: :delete, turbo_confirm: "Remover a remessa #{remessa.codapr}/#{remessa.isql}?" }, class: "btn btn-sm btn-outline-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<p class="text-muted">Mostrando até 50 registros<%= " com os filtros aplicados" if params.values_at(:codapr, :snomearquivotexto, :datarem).any?(&:present?) %>.</p>

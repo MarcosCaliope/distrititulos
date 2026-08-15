@@ -1,0 +1,54 @@
+<%= form_with model: remessa do |f| %>
+  <% if remessa.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(remessa.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% remessa.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :codapr, "Código apresentante", class: "form-label" %>
+    <%= f.text_field :codapr, maxlength: 6, readonly: remessa.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :snomearquivotexto, "Arquivo texto", class: "form-label" %>
+    <%= f.text_field :snomearquivotexto, maxlength: 50, readonly: remessa.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :isql, "ISQL", class: "form-label" %>
+    <%= f.number_field :isql, readonly: remessa.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :datarem, "Data remessa", class: "form-label" %>
+    <%= f.date_field :datarem, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :situacao, "Situação", class: "form-label" %>
+    <%= f.text_field :situacao, maxlength: 2, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :icodirreg, "Código irregularidade", class: "form-label" %>
+    <%= f.number_field :icodirreg, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :tipo_tit, "Tipo título", class: "form-label" %>
+    <%= f.text_field :tipo_tit, maxlength: 2, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sregistro, "Registro", class: "form-label" %>
+    <%= f.text_area :sregistro, maxlength: 650, rows: 4, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

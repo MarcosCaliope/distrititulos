@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   resources :tipo_tits
   resources :titulos
   resources :atos
+  resources :feriados
+  resources :remessas, constraints: { id: /.+/ }
 
   # Defines the root path route ("/")
   root "home#index"
