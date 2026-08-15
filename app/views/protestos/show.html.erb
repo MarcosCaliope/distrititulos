@@ -1,0 +1,21 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0"><%= @protesto.pro_cartorio %></h1>
+  <div>
+    <%= link_to "Editar", edit_protesto_path(@protesto), class: "btn btn-primary" %>
+    <%= link_to "Voltar", protestos_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>ID:</strong> <%= @protesto.pro_id %></li>
+    <li class="list-group-item"><strong>Cartório:</strong> <%= @protesto.pro_cartorio %></li>
+    <li class="list-group-item"><strong>E-mail:</strong> <%= @protesto.pro_email %></li>
+    <li class="list-group-item"><strong>Oficial:</strong> <%= @protesto.pro_oficial %></li>
+    <li class="list-group-item"><strong>Fone:</strong> <%= @protesto.pro_fone %></li>
+    <li class="list-group-item"><strong>ID protocolo escritura:</strong> <%= @protesto.id_prot_escritura %></li>
+    <li class="list-group-item"><strong>Ativa SC títulos:</strong> <%= @protesto.ativa_sc_titulos ? "Sim" : "Não" %></li>
+    <li class="list-group-item"><strong>Cópia de e-mail:</strong> <%= @protesto.scopiaemail %></li>
+    <li class="list-group-item"><strong>Livre:</strong> <%= @protesto.blivre ? "Sim" : "Não" %></li>
+  </ul>
+</div>

@@ -1,0 +1,49 @@
+<%= form_with model: faixa do |f| %>
+  <% if faixa.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(faixa.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% faixa.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :tipo, class: "form-label" %>
+    <%= f.text_field :tipo, maxlength: 1, readonly: faixa.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :valor, class: "form-label" %>
+    <%= f.number_field :valor, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :num_cart, "Nº cartório", class: "form-label" %>
+    <%= f.number_field :num_cart, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :qtd_dia, "Quantidade/dia", class: "form-label" %>
+    <%= f.number_field :qtd_dia, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :climiteinferior, "Limite inferior", class: "form-label" %>
+    <%= f.number_field :climiteinferior, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :climitesuperior, "Limite superior", class: "form-label" %>
+    <%= f.number_field :climitesuperior, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :isequencial, "Sequencial", class: "form-label" %>
+    <%= f.number_field :isequencial, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

@@ -1,0 +1,47 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Faixas</h1>
+  <%= link_to "Nova faixa", new_faixa_path, class: "btn btn-primary" %>
+</div>
+
+<%= form_with url: faixas_path, method: :get, class: "row g-2 mb-4" do %>
+  <div class="col-auto">
+    <%= text_field_tag :q, params[:q], placeholder: "Buscar por tipo", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= submit_tag "Buscar", class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
+
+<div class="table-responsive">
+  <table class="table table-striped table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Valor</th>
+        <th>Nº cartório</th>
+        <th>Qtd/dia</th>
+        <th>Limite inferior</th>
+        <th>Limite superior</th>
+        <th class="text-end">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @faixas.each do |faixa| %>
+        <tr>
+          <td><%= link_to faixa.tipo, faixa %></td>
+          <td><%= faixa.valor %></td>
+          <td><%= faixa.num_cart %></td>
+          <td><%= faixa.qtd_dia %></td>
+          <td><%= faixa.climiteinferior %></td>
+          <td><%= faixa.climitesuperior %></td>
+          <td class="text-end">
+            <%= link_to "Editar", edit_faixa_path(faixa), class: "btn btn-sm btn-outline-secondary" %>
+            <%= link_to "Remover", faixa, data: { turbo_method: :delete, turbo_confirm: "Remover a faixa #{faixa.tipo}?" }, class: "btn btn-sm btn-outline-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<p class="text-muted">Mostrando até 50 registros<%= " para \"#{params[:q]}\"" if params[:q].present? %>.</p>

@@ -1,0 +1,19 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Faixa <%= @faixa.tipo %></h1>
+  <div>
+    <%= link_to "Editar", edit_faixa_path(@faixa), class: "btn btn-primary" %>
+    <%= link_to "Voltar", faixas_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Tipo:</strong> <%= @faixa.tipo %></li>
+    <li class="list-group-item"><strong>Valor:</strong> <%= @faixa.valor %></li>
+    <li class="list-group-item"><strong>Nº cartório:</strong> <%= @faixa.num_cart %></li>
+    <li class="list-group-item"><strong>Quantidade/dia:</strong> <%= @faixa.qtd_dia %></li>
+    <li class="list-group-item"><strong>Limite inferior:</strong> <%= @faixa.climiteinferior %></li>
+    <li class="list-group-item"><strong>Limite superior:</strong> <%= @faixa.climitesuperior %></li>
+    <li class="list-group-item"><strong>Sequencial:</strong> <%= @faixa.isequencial %></li>
+  </ul>
+</div>
