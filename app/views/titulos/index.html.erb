@@ -5,7 +5,24 @@
 
 <%= form_with url: titulos_path, method: :get, class: "row g-2 mb-4" do %>
   <div class="col-auto">
-    <%= text_field_tag :q, params[:q], placeholder: "Protocolo, número do título ou CPF/CNPJ exato", class: "form-control" %>
+    <%= text_field_tag :q, params[:q], placeholder: "Protocolo ou número do título", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= text_field_tag :cpf_cgc, params[:cpf_cgc], placeholder: "CPF/CNPJ", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= text_field_tag :devedor, params[:devedor], placeholder: "Nome do devedor", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= number_field_tag :valor, params[:valor], placeholder: "Valor aproximado (±5%)", step: "any", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= label_tag :dat_rece, "Recebimento", class: "visually-hidden" %>
+    <%= date_field_tag :dat_rece, params[:dat_rece], class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= label_tag :dat_dist, "Distribuição", class: "visually-hidden" %>
+    <%= date_field_tag :dat_dist, params[:dat_dist], class: "form-control" %>
   </div>
   <div class="col-auto">
     <%= submit_tag "Buscar", class: "btn btn-outline-secondary" %>
@@ -22,6 +39,7 @@
         <th>Devedor</th>
         <th>Valor</th>
         <th>Data recebimento</th>
+        <th>Data distribuição</th>
         <th>Status</th>
         <th class="text-end">Ações</th>
       </tr>
@@ -35,6 +53,7 @@
           <td><%= titulo.devedor %></td>
           <td><%= number_to_currency(titulo.valor, unit: "R$") %></td>
           <td><%= titulo.dat_rece %></td>
+          <td><%= titulo.dat_dist %></td>
           <td><%= titulo.status %></td>
           <td class="text-end">
             <%= link_to "Editar", edit_titulo_path(titulo), class: "btn btn-sm btn-outline-secondary" %>
@@ -46,4 +65,4 @@
   </table>
 </div>
 
-<p class="text-muted">Mostrando até 50 registros<%= " para \"#{params[:q]}\"" if params[:q].present? %>.</p>
+<p class="text-muted">Mostrando até 50 registros<%= " com os filtros aplicados" if params.values_at(:q, :cpf_cgc, :devedor, :valor, :dat_rece, :dat_dist).any?(&:present?) %>.</p>
