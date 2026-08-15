@@ -1,9 +1,38 @@
 <div class="text-center py-5">
   <h1 class="mb-4">Sistema de Distribuição de Títulos</h1>
 
-  <div class="d-flex justify-content-center gap-3">
-    <%= link_to "Apresentantes", apresentantes_path, class: "btn btn-primary btn-lg px-4" %>
-    <%= link_to "Bancos", bancos_path, class: "btn btn-primary btn-lg px-4" %>
-    <%= link_to "Devedores", devedores_path, class: "btn btn-primary btn-lg px-4" %>
+  <ul class="nav nav-tabs justify-content-center mb-4" id="homeTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active" id="cadastros-tab" data-bs-toggle="tab" data-bs-target="#cadastros" type="button" role="tab" aria-controls="cadastros" aria-selected="true">Cadastros</button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link" id="processos-tab" data-bs-toggle="tab" data-bs-target="#processos" type="button" role="tab" aria-controls="processos" aria-selected="false">Processos</button>
+    </li>
+  </ul>
+
+  <div class="tab-content" id="homeTabsContent">
+    <div class="tab-pane fade show active" id="cadastros" role="tabpanel" aria-labelledby="cadastros-tab">
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <%= link_to "Apresentantes", apresentantes_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Bancos", bancos_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Devedores", devedores_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Devedores solidários", devedor_solidarios_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Distribuidores", distribuidores_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Espécies", especies_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Faixas", faixas_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Protestos", protestos_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Tipos de documento", tipo_docs_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Tipos de título", tipo_tits_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Atos", atos_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Feriados", feriados_path, class: "btn btn-primary btn-lg px-4" %>
+      </div>
+    </div>
+
+    <div class="tab-pane fade" id="processos" role="tabpanel" aria-labelledby="processos-tab">
+      <div class="d-flex flex-wrap justify-content-center gap-3">
+        <%= link_to "Títulos", titulos_path, class: "btn btn-primary btn-lg px-4" %>
+        <%= link_to "Remessas", remessas_path, class: "btn btn-primary btn-lg px-4" %>
+      </div>
+    </div>
   </div>
 </div>
