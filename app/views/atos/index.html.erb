@@ -24,6 +24,7 @@
         <th>ISS</th>
         <th>FAADEP</th>
         <th>FRMP</th>
+        <th>Total</th>
         <th class="text-end">Ações</th>
       </tr>
     </thead>
@@ -38,6 +39,7 @@
           <td><%= ato.ciss %></td>
           <td><%= ato.cfaadep %></td>
           <td><%= ato.cfrmp %></td>
+          <td><%= number_to_currency(ato.valor_total, unit: "R$") %></td>
           <td class="text-end">
             <%= link_to "Editar", edit_ato_path(ato), class: "btn btn-sm btn-outline-secondary" %>
             <%= link_to "Remover", ato, data: { turbo_method: :delete, turbo_confirm: "Remover o ato #{ato.icodato}/#{ato.ano}?" }, class: "btn btn-sm btn-outline-danger" %>

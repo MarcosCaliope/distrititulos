@@ -16,5 +16,6 @@
     <li class="list-group-item"><strong>ISS:</strong> <%= @ato.ciss %></li>
     <li class="list-group-item"><strong>FAADEP:</strong> <%= @ato.cfaadep %></li>
     <li class="list-group-item"><strong>FRMP:</strong> <%= @ato.cfrmp %></li>
+    <li class="list-group-item"><strong>Total:</strong> <%= number_to_currency(@ato.valor_total, unit: "R$") %></li>
   </ul>
 </div>

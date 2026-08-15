@@ -10,4 +10,8 @@ class Ato < ApplicationRecord
   validates :ciss, length: { maximum: 10 }
   validates :cfaadep, length: { maximum: 10 }
   validates :cfrmp, length: { maximum: 10 }
+
+  def valor_total
+    [ cemolumento, cfermoju, cselo, ciss, cfaadep, cfrmp ].sum { |v| v.to_s.to_f }
+  end
 end
