@@ -1,0 +1,196 @@
+<%= form_with model: titulo do |f| %>
+  <% if titulo.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(titulo.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% titulo.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <h2 class="h5">Identificação</h2>
+
+  <div class="mb-3">
+    <%= f.label :protocolo, class: "form-label" %>
+    <%= f.text_field :protocolo, maxlength: 10, readonly: titulo.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :tipo_doc, "Tipo de documento", class: "form-label" %>
+    <%= f.text_field :tipo_doc, maxlength: 3, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cpf_cgc, "CPF/CNPJ", class: "form-label" %>
+    <%= f.text_field :cpf_cgc, maxlength: 14, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :tipo_tit, "Tipo de título", class: "form-label" %>
+    <%= f.text_field :tipo_tit, maxlength: 2, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :num_tit, "Número do título", class: "form-label" %>
+    <%= f.text_field :num_tit, maxlength: 15, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :devedor, class: "form-label" %>
+    <%= f.text_field :devedor, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cedente, class: "form-label" %>
+    <%= f.text_field :cedente, maxlength: 45, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sacador, class: "form-label" %>
+    <%= f.text_field :sacador, maxlength: 45, class: "form-control" %>
+  </div>
+
+  <h2 class="h5">Datas e valor</h2>
+
+  <div class="mb-3">
+    <%= f.label :valor, class: "form-label" %>
+    <%= f.number_field :valor, step: "any", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :dat_venc, "Data de vencimento", class: "form-label" %>
+    <%= f.date_field :dat_venc, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :dat_rece, "Data de recebimento", class: "form-label" %>
+    <%= f.date_field :dat_rece, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :dat_dist, "Data de distribuição", class: "form-label" %>
+    <%= f.date_field :dat_dist, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :dat_emissao, "Data de emissão", class: "form-label" %>
+    <%= f.date_field :dat_emissao, class: "form-control" %>
+  </div>
+
+  <h2 class="h5">Cartório e apresentante</h2>
+
+  <div class="mb-3">
+    <%= f.label :cartorio, class: "form-label" %>
+    <%= f.text_field :cartorio, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :oficio, "Ofício", class: "form-label" %>
+    <%= f.text_field :oficio, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :status, class: "form-label" %>
+    <%= f.text_field :status, maxlength: 2, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cod_apr, "Código apresentante", class: "form-label" %>
+    <%= f.text_field :cod_apr, maxlength: 6, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :nome_apr, "Nome apresentante", class: "form-label" %>
+    <%= f.text_field :nome_apr, maxlength: 45, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cd_banco, "Banco", class: "form-label" %>
+    <%= f.text_field :cd_banco, maxlength: 3, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cd_agencia, "Agência", class: "form-label" %>
+    <%= f.text_field :cd_agencia, maxlength: 7, class: "form-control" %>
+  </div>
+
+  <h2 class="h5">Endereço do devedor</h2>
+
+  <div class="mb-3">
+    <%= f.label :senddevedor, "Endereço", class: "form-label" %>
+    <%= f.text_field :senddevedor, maxlength: 45, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scepdevedor, "CEP", class: "form-label" %>
+    <%= f.text_field :scepdevedor, maxlength: 8, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sciddevedor, "Cidade", class: "form-label" %>
+    <%= f.text_field :sciddevedor, maxlength: 20, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sufdevedor, "UF", class: "form-label" %>
+    <%= f.text_field :sufdevedor, maxlength: 2, class: "form-control" %>
+  </div>
+
+  <h2 class="h5">Sacador</h2>
+
+  <div class="mb-3">
+    <%= f.label :sdocsacador, "Documento do sacador", class: "form-label" %>
+    <%= f.text_field :sdocsacador, maxlength: 14, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sendsacador, "Endereço", class: "form-label" %>
+    <%= f.text_field :sendsacador, maxlength: 45, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scepsacador, "CEP", class: "form-label" %>
+    <%= f.text_field :scepsacador, maxlength: 8, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scidsacador, "Cidade", class: "form-label" %>
+    <%= f.text_field :scidsacador, maxlength: 20, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sufsacador, "UF", class: "form-label" %>
+    <%= f.text_field :sufsacador, maxlength: 2, class: "form-control" %>
+  </div>
+
+  <h2 class="h5">Outros</h2>
+
+  <div class="mb-3">
+    <%= f.label :snomearquivotexto, "Arquivo texto", class: "form-label" %>
+    <%= f.text_field :snomearquivotexto, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :stipoocorrencia, "Tipo de ocorrência", class: "form-label" %>
+    <%= f.text_field :stipoocorrencia, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :icodirregularidade, "Código irregularidade", class: "form-label" %>
+    <%= f.number_field :icodirregularidade, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :isql, class: "form-label" %>
+    <%= f.number_field :isql, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sefeitofalencia, "Efeito falência", class: "form-label" %>
+    <%= f.text_field :sefeitofalencia, maxlength: 1, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

@@ -1,0 +1,77 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Título <%= @titulo.protocolo %></h1>
+  <div>
+    <%= link_to "Editar", edit_titulo_path(@titulo), class: "btn btn-primary" %>
+    <%= link_to "Voltar", titulos_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header">Identificação</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Protocolo:</strong> <%= @titulo.protocolo %></li>
+    <li class="list-group-item"><strong>Tipo de documento:</strong> <%= @titulo.tipo_doc %></li>
+    <li class="list-group-item"><strong>CPF/CNPJ:</strong> <%= @titulo.cpf_cgc %></li>
+    <li class="list-group-item"><strong>Tipo de título:</strong> <%= @titulo.tipo_tit %></li>
+    <li class="list-group-item"><strong>Número do título:</strong> <%= @titulo.num_tit %></li>
+    <li class="list-group-item"><strong>Devedor:</strong> <%= @titulo.devedor %></li>
+    <li class="list-group-item"><strong>Cedente:</strong> <%= @titulo.cedente %></li>
+    <li class="list-group-item"><strong>Sacador:</strong> <%= @titulo.sacador %></li>
+  </ul>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header">Datas e valor</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Valor:</strong> <%= number_to_currency(@titulo.valor, unit: "R$") %></li>
+    <li class="list-group-item"><strong>Data de vencimento:</strong> <%= @titulo.dat_venc %></li>
+    <li class="list-group-item"><strong>Data de recebimento:</strong> <%= @titulo.dat_rece %></li>
+    <li class="list-group-item"><strong>Data de distribuição:</strong> <%= @titulo.dat_dist %></li>
+    <li class="list-group-item"><strong>Data de emissão:</strong> <%= @titulo.dat_emissao %></li>
+  </ul>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header">Cartório e apresentante</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Cartório:</strong> <%= @titulo.cartorio %></li>
+    <li class="list-group-item"><strong>Ofício:</strong> <%= @titulo.oficio %></li>
+    <li class="list-group-item"><strong>Status:</strong> <%= @titulo.status %></li>
+    <li class="list-group-item"><strong>Código apresentante:</strong> <%= @titulo.cod_apr %></li>
+    <li class="list-group-item"><strong>Nome apresentante:</strong> <%= @titulo.nome_apr %></li>
+    <li class="list-group-item"><strong>Banco:</strong> <%= @titulo.cd_banco %></li>
+    <li class="list-group-item"><strong>Agência:</strong> <%= @titulo.cd_agencia %></li>
+  </ul>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header">Endereço do devedor</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Endereço:</strong> <%= @titulo.senddevedor %></li>
+    <li class="list-group-item"><strong>CEP:</strong> <%= @titulo.scepdevedor %></li>
+    <li class="list-group-item"><strong>Cidade:</strong> <%= @titulo.sciddevedor %></li>
+    <li class="list-group-item"><strong>UF:</strong> <%= @titulo.sufdevedor %></li>
+  </ul>
+</div>
+
+<div class="card mb-3">
+  <div class="card-header">Sacador</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Documento do sacador:</strong> <%= @titulo.sdocsacador %></li>
+    <li class="list-group-item"><strong>Endereço:</strong> <%= @titulo.sendsacador %></li>
+    <li class="list-group-item"><strong>CEP:</strong> <%= @titulo.scepsacador %></li>
+    <li class="list-group-item"><strong>Cidade:</strong> <%= @titulo.scidsacador %></li>
+    <li class="list-group-item"><strong>UF:</strong> <%= @titulo.sufsacador %></li>
+  </ul>
+</div>
+
+<div class="card">
+  <div class="card-header">Outros</div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>Arquivo texto:</strong> <%= @titulo.snomearquivotexto %></li>
+    <li class="list-group-item"><strong>Tipo de ocorrência:</strong> <%= @titulo.stipoocorrencia %></li>
+    <li class="list-group-item"><strong>Código irregularidade:</strong> <%= @titulo.icodirregularidade %></li>
+    <li class="list-group-item"><strong>ISQL:</strong> <%= @titulo.isql %></li>
+    <li class="list-group-item"><strong>Efeito falência:</strong> <%= @titulo.sefeitofalencia %></li>
+  </ul>
+</div>

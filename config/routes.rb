@@ -19,6 +19,7 @@ Rails.application.routes.draw do
   resources :protestos
   resources :tipo_docs
   resources :tipo_tits
+  resources :titulos
 
   # Defines the root path route ("/")
   root "home#index"
