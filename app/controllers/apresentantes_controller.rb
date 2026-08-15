@@ -48,7 +48,9 @@ class ApresentantesController < ApplicationController
 
   def apresentante_params
     params.require(:apresentante).permit(
-      :codigo, :nome, :endereco, :fone, :contato, :agencia, :tipo, :convenio, :scustaantecipada
+      :codigo, :nome, :endereco, :fone, :contato, :agencia, :tipo, :convenio, :scustaantecipada,
+      :scodcompensacao, :bcra, :scnpj, :scep, :scidade, :sestado, :scontato, :sfone,
+      :bdistelet, :bisentos, :bcenprot, :bpermitedevedoroutrapraca
     )
   end
 end

@@ -11,4 +11,11 @@ class Apresentante < ApplicationRecord
   validates :tipo, length: { maximum: 1 }
   validates :convenio, length: { maximum: 1 }
   validates :scustaantecipada, length: { maximum: 1 }
+  validates :scodcompensacao, length: { maximum: 6 }
+  validates :scnpj, length: { maximum: 14 }
+  validates :scep, length: { maximum: 10 }
+  validates :scidade, length: { maximum: 20 }
+  validates :sestado, length: { maximum: 2 }
+  validates :scontato, length: { maximum: 30 }
+  validates :sfone, length: { maximum: 10 }
 end
