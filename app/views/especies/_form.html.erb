@@ -1,0 +1,29 @@
+<%= form_with model: especie do |f| %>
+  <% if especie.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(especie.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% especie.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :codigo, class: "form-label" %>
+    <%= f.text_field :codigo, maxlength: 3, readonly: especie.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :descricao, "Descrição", class: "form-label" %>
+    <%= f.text_field :descricao, maxlength: 40, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :cd2, class: "form-label" %>
+    <%= f.text_field :cd2, maxlength: 2, class: "form-control" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :devedores
   resources :devedor_solidarios
   resources :distribuidores
+  resources :especies
 
   # Defines the root path route ("/")
   root "home#index"
