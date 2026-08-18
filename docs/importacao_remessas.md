@@ -63,36 +63,17 @@ Trailer: portador (2,3), soma de segurança/quantidade (53,5).
 Layout validado campo a campo contra um arquivo real de amostra
 (`processados/B0010401.221`, 62 linhas) — todos os offsets conferem.
 
-## Validações estruturais (abortam a importação inteira, nada é gravado)
+## Validações
 
-1. Caractere não-ASCII (acentuado) em qualquer linha.
-2. Sequencial da linha (posição 597-600) fora de ordem.
-3. Primeira linha não é tipo `0`.
-4. Apresentante/banco do header não cadastrado (`cad_bancos.codigo`/`codalfa` → `cd2` →
-   `cad_apresenta.codigo`).
-5. Linha do meio que não é tipo `1`, ou portador divergente do header.
-6. Última linha não é tipo `9`, ou portador divergente do header.
-7. Contagem de títulos/indicações/originais divergente do header.
-8. Soma de segurança do trailer divergente.
-9. Arquivo (mesmo nome) já importado antes.
-
-## Validações por título (marcam irregular, não abortam)
-
-`tipo_tit = "*"`, `icodirregularidade` e `stipoocorrencia = "5"` são gravados quando:
-espécie não cadastrada em `cad_tipostit` (21) · CPF/CNPJ do devedor inválido (7) · CPF/CNPJ
-do sacador inválido (10) · falta número do título (16) · endereço do devedor vazio/curto/sem
-número (6) · data de emissão inválida (50) · data de vencimento inválida, no futuro, ou
-emissão > vencimento (1) · nome do devedor igual ao cedente ou sacador (3) · documento do
-devedor zerado (50) ou igual ao do credor (7) · [só linha titular] praça/cidade do devedor
-diferente de "FORTALEZA" — exceto apresentante `073` (15) · [só linha titular] falência em
-CPF (50). Se **várias** regras falharem no mesmo título, só o código da **última** que falhou
-fica gravado (mesmo comportamento do VB original) — mas todas geram uma linha no log.
-Descrições oficiais desses códigos: tabela própria `irregularidades` (não a
-`distribuidor.irregularidades`, que pertence a outra aplicação — copiamos os 70 códigos de
-lá uma única vez para termos uma tabela independente).
-
-Dígito verificador de CPF/CNPJ: o código-fonte original (`DVCPF`/`DVCGC`) não estava no
-projeto exportado, então usei os algoritmos padrão nacionais.
+Lista completa (estruturais, que abortam a importação inteira, e por título, que só marcam o
+título como irregular) em `docs/validacoes_importacao_remessas.md`. Resumo: 14 validações
+estruturais (arquivo vazio, caractere não-ASCII, sequência de linhas, tipos de registro,
+apresentante não cadastrado, arquivo já importado, contagens/soma de segurança do
+header/trailer) e 13 validações por título (espécie, CPF/CNPJ do devedor e do sacador,
+número do título, endereço, datas de emissão/vencimento, nome do devedor, praça/cidade, e
+falência em CPF). Descrições oficiais dos códigos de irregularidade: tabela própria
+`irregularidades` (não a `distribuidor.irregularidades`, que pertence a outra aplicação —
+copiamos os 70 códigos de lá uma única vez para termos uma tabela independente).
 
 ## O que é gravado
 
