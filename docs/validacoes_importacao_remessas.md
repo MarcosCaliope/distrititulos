@@ -64,6 +64,16 @@ O valor gravado em `cad_titulos.cod_apr` depende do município da empresa (`cad_
 
 Calculado uma única vez por arquivo (a partir do apresentante do header), não por título.
 
+## Espécie (não é uma crítica)
+
+A espécie (abreviação na posição 214–216) **não marca o título irregular** quando não está
+cadastrada em `cad_tipostit` — diferente de todas as validações por título abaixo. Em vez
+disso, `RemessaImporter#criar_tipo_tit` cadastra a espécie na hora: cria um `TipoTit` novo com
+`abrevia` igual ao valor do arquivo e `codigo` igual ao maior `codigo` numérico já cadastrado
+mais 1 (códigos não numéricos, como as letras usadas em alguns registros antigos, são
+ignorados nesse cálculo). O título usa o `codigo` desse registro (novo ou existente)
+normalmente, com `icodirregularidade = 0`.
+
 ## Validações por título
 
 Checadas em `avaliar_criticas` para cada linha de título (titular ou solidária). O código
@@ -74,7 +84,6 @@ linha no log de importação.
 
 | Código | Condição |
 |---|---|
-| 21 | Espécie (abreviação na posição 214–216) não cadastrada em `cad_tipostit`. |
 | 7 | CPF/CNPJ do devedor (posição 346–359) inválido pelo dígito verificador padrão. |
 | 10 | CPF/CNPJ do sacador (posição 110–123) inválido. |
 | 16 | Número do título (posição 217–227) vazio. |

@@ -320,6 +320,14 @@ class RemessaImporter
     devedor
   end
 
+  # Espécies não cadastradas não marcam o título irregular (diferente das outras críticas):
+  # a espécie é criada na hora, com o próximo código numérico disponível.
+  def criar_tipo_tit(abrevia)
+    proximo_codigo = TipoTit.pluck(:codigo).select { |c| c.match?(/\A\d+\z/) }.map(&:to_i).max.to_i + 1
+    grava_log("Natureza \"#{abrevia}\" não cadastrada. Criando nova espécie com código #{proximo_codigo}")
+    TipoTit.create!(codigo: proximo_codigo.to_s, abrevia: abrevia)
+  end
+
   # --- Críticas por título (não abortam, só marcam irregular) --------------
 
   def avaliar_criticas(linha, tipo_doc_devedor, doc_devedor, principal:)
@@ -335,12 +343,8 @@ class RemessaImporter
     end
 
     especie_codigo = campo(linha, 214, 3).strip
-    tipo_tit_registro = TipoTit.find_by(abrevia: especie_codigo)
-    if tipo_tit_registro
-      tipo_tit = tipo_tit_registro.codigo
-    else
-      marcar.call(21, "Natureza não Cadastrada. Titulo Marcado como Irregular")
-    end
+    tipo_tit_registro = TipoTit.find_by(abrevia: especie_codigo) || criar_tipo_tit(especie_codigo)
+    tipo_tit = tipo_tit_registro.codigo
 
     unless documento_valido?(tipo_doc_devedor, doc_devedor)
       marcar.call(7, "Numero do Documento do Devedor Inválido, Marcado como Irregular")
