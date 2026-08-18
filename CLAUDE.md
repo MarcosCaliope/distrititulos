@@ -13,8 +13,11 @@ and column names are old and in Portuguese (`cad_titulos`, `cad_protesto`, `tblr
 `tbldevedorsolidario`, etc.), many with fixed-width columns and composite primary keys.
 
 Cadastros (reference data) with standard CRUD (index w/ search, show, new/edit, destroy):
-Apresentantes, Bancos, Devedores, Devedores solidários, Distribuidores, Espécies, Faixas,
-Protestos, Tipos de documento, Tipos de título, Atos, Feriados, Irregularidades.
+Apresentantes, Bancos, Devedores, Devedores solidários, Distribuidores, Empresas, Espécies,
+Faixas, Protestos, Tipos de documento, Tipos de título, Atos, Feriados, Irregularidades.
+`cad_empresa` (`Empresa` model) is a single-row table describing the cartório itself
+(address, CNPJ, município) — the remessa importer reads its `scodmunicipio` to decide how
+`cad_titulos.cod_apr` is set (see "Remessa import" below).
 
 Processos (the actual business workflow):
 - **Títulos** (`cad_titulos`, ~5.7M rows) — the central table, títulos taken to protest.
@@ -107,8 +110,12 @@ placeholders), so there's no existing test to pattern-match against yet.
   written) if they fail, then per-título validations ("críticas") that don't abort — they just
   mark that título irregular (`tipo_tit = "*"`, `icodirregularidade` set) and keep going, same
   as the original. Everything is wrapped in one `ActiveRecord::Base.transaction` (a deliberate
-  change from the original, which wrote row-by-row with no transaction). Full field layout,
-  validation list, and irregularidade codes are documented in
-  `docs/importacao_remessas.md` — read it before touching this service, since the fixed-width
-  offsets and validation order both need to stay byte-for-byte compatible with the legacy
-  format.
+  change from the original, which wrote row-by-row with no transaction). Full field layout and
+  what gets written is documented in `docs/importacao_remessas.md`; the complete, ordered list
+  of validations (structural and per-título) and irregularidade codes is in
+  `docs/validacoes_importacao_remessas.md` — read both before touching this service, since the
+  fixed-width offsets and validation order both need to stay byte-for-byte compatible with the
+  legacy format. Two lookups worth knowing before changing them: the header's apresentante is
+  resolved by `cad_apresenta.scodcompensacao` (not via `cad_bancos`), and the `cod_apr` written
+  to every título depends on whether `cad_empresa.scodmunicipio` is Fortaleza-CE's IBGE code
+  (`2304400`) or not, computed once per file from the header's apresentante.
