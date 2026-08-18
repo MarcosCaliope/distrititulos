@@ -13,8 +13,8 @@ and column names are old and in Portuguese (`cad_titulos`, `cad_protesto`, `tblr
 `tbldevedorsolidario`, etc.), many with fixed-width columns and composite primary keys.
 
 Cadastros (reference data) with standard CRUD (index w/ search, show, new/edit, destroy):
-Apresentantes, Bancos, Devedores, Devedores solidários, Distribuidores, Espécies, Faixas,
-Protestos, Tipos de documento, Tipos de título, Atos, Feriados, Irregularidades.
+Apresentantes, Bancos, Devedores, Devedores solidários, Distribuidores, Empresas, Espécies,
+Faixas, Protestos, Tipos de documento, Tipos de título, Atos, Feriados, Irregularidades.
 
 Processos (the actual business workflow):
 - **Títulos** (`cad_titulos`, ~5.7M rows) — the central table, títulos taken to protest.
@@ -106,9 +106,13 @@ placeholders), so there's no existing test to pattern-match against yet.
   fixed-width file, runs structural validations that abort the whole import (nothing is
   written) if they fail, then per-título validations ("críticas") that don't abort — they just
   mark that título irregular (`tipo_tit = "*"`, `icodirregularidade` set) and keep going, same
-  as the original. Everything is wrapped in one `ActiveRecord::Base.transaction` (a deliberate
-  change from the original, which wrote row-by-row with no transaction). Full field layout,
-  validation list, and irregularidade codes are documented in
-  `docs/importacao_remessas.md` — read it before touching this service, since the fixed-width
-  offsets and validation order both need to stay byte-for-byte compatible with the legacy
-  format.
+  as the original. One exception: an unknown espécie is auto-created in `cad_especie` rather
+  than triggering a crítica. The apresentante of the header is located via
+  `cad_apresenta.scodcompensacao`, and the `cad_titulos.cod_apr` written for each título
+  depends on the município of `cad_empresa`. Everything is wrapped in one
+  `ActiveRecord::Base.transaction` (a deliberate change from the original, which wrote
+  row-by-row with no transaction). Full field layout and what gets written are documented in
+  `docs/importacao_remessas.md`; the complete validation list (structural + per-título) and
+  irregularidade codes are in `docs/validacoes_importacao_remessas.md` — read both before
+  touching this service, since the fixed-width offsets and validation order both need to stay
+  byte-for-byte compatible with the legacy format.
