@@ -347,7 +347,11 @@ class RemessaImporter
     tipo_tit = tipo_tit_registro.codigo
 
     unless documento_valido?(tipo_doc_devedor, doc_devedor)
-      marcar.call(7, "Numero do Documento do Devedor Inválido, Marcado como Irregular")
+      if doc_devedor == "00000000000000"
+        marcar.call(50, "Numero do Documento do Devedor Inválido = 00000000000000, Marcado como Irregular")
+      else
+        marcar.call(7, "Numero do Documento do Devedor Inválido, Marcado como Irregular")
+      end
     end
 
     doc_sacador = campo(linha, 110, 14).strip
@@ -392,9 +396,6 @@ class RemessaImporter
       marcar.call(3, "Nome do Devedor é igual ao Nome do Sacador/Vendedor. Titulo Marcado como Irregular")
     end
 
-    if doc_devedor == "00000000000000"
-      marcar.call(50, "Numero do Documento do Devedor Inválido = 00000000000000, Marcado como Irregular")
-    end
     if doc_devedor == doc_sacador
       marcar.call(7, "documento do Devedor é igual ao documento do Credor. Titulo Marcado como Irregular")
     end

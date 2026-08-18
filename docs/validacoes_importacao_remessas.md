@@ -84,14 +84,13 @@ linha no log de importação.
 
 | Código | Condição |
 |---|---|
-| 7 | CPF/CNPJ do devedor (posição 346–359) inválido pelo dígito verificador padrão. |
+| 7 | CPF/CNPJ do devedor (posição 346–359) inválido pelo dígito verificador padrão — exceto quando o documento é exatamente `00000000000000`, caso em que o código gravado é 50 em vez de 7. Documentos do tipo `CI` (nem CPF nem CGC) nunca falham essa checagem, independente do conteúdo — igual ao original, que só valida dígito verificador de CPF/CNPJ. |
 | 10 | CPF/CNPJ do sacador (posição 110–123) inválido. |
 | 16 | Número do título (posição 217–227) vazio. |
 | 6 | Endereço do devedor (posição 371–415) vazio, ou com menos de 5 posições, ou sem nenhum dígito e sem "S/N". |
 | 50 | Data de emissão (posição 228–235, `DDMMAAAA`) inválida ou anterior a 1900-01-01 — nesse caso a data é forçada para 1900-01-01. |
 | 1 | Data de vencimento (posição 236–243) inválida, no futuro (maior que hoje), ou anterior à data de emissão. |
 | 3 | Nome do devedor (posição 298–342) igual ao nome do cedente (posição 20–64) ou ao nome do sacador (posição 65–109). |
-| 50 | Documento do devedor é `00000000000000`. |
 | 7 | Documento do devedor igual ao documento do sacador. |
 | 15 | *(só na linha titular)* Praça de pagamento (posição 275–294) diferente de "FORTALEZA" — exceto para o apresentante `073`. |
 | 15 | *(só na linha titular)* Cidade do devedor (posição 424–443) diferente de "FORTALEZA" — exceto para o apresentante `073`. |

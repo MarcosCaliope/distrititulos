@@ -69,7 +69,7 @@ Lista completa (estruturais, que abortam a importação inteira, e por título, 
 título como irregular) em `docs/validacoes_importacao_remessas.md`. Resumo: 15 validações
 estruturais (arquivo vazio, caractere não-ASCII, sequência de linhas, tipos de registro,
 apresentante não cadastrado, empresa não cadastrada, arquivo já importado, contagens/soma de
-segurança do header/trailer) e 12 validações por título (CPF/CNPJ do devedor e do sacador,
+segurança do header/trailer) e 11 validações por título (CPF/CNPJ do devedor e do sacador,
 número do título, endereço, datas de emissão/vencimento, nome do devedor, praça/cidade, e
 falência em CPF). Espécie não cadastrada não é uma crítica — é cadastrada automaticamente
 (ver `docs/validacoes_importacao_remessas.md`). Descrições oficiais dos códigos de
