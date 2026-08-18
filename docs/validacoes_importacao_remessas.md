@@ -89,7 +89,8 @@ linha no log de importação.
 | 16 | Número do título (posição 217–227) vazio. |
 | 6 | Endereço do devedor (posição 371–415) vazio, ou com menos de 5 posições (no campo bruto, sem remover espaços — na prática só pega linha truncada, já que o campo de largura fixa normalmente vem preenchido com espaços até 45 posições), ou sem "SN"/"S/N"/"S?N" em nenhum lugar da string (não importa se há dígito). |
 | 50 | Data de emissão (posição 228–235, `DDMMAAAA`) inválida ou anterior a 1900-01-01 — nesse caso a data é forçada para 1900-01-01. |
-| 1 | Data de vencimento (posição 236–243) inválida, no futuro (maior que hoje), ou anterior à data de emissão. |
+| 50 | Data de vencimento (posição 236–243) inválida (não é `DDMMAAAA` parseável nem um dos códigos especiais `99999999`/`99990001`/`99990030`) — nesse caso a data é forçada para a data de emissão. |
+| 1 | Data de vencimento no futuro (maior que hoje) ou anterior à data de emissão. |
 | 3 | Nome do devedor (posição 298–342) igual ao nome do cedente (posição 20–64) ou ao nome do sacador (posição 65–109). |
 | 7 | Documento do devedor igual ao documento do sacador. |
 | 15 | *(só na linha titular)* Praça de pagamento (posição 275–294) diferente de "FORTALEZA" — exceto para o apresentante `073`. |

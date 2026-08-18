@@ -380,7 +380,7 @@ class RemessaImporter
 
     dt_vencto = resolver_vencimento(linha, dt_emissao)
     if dt_vencto.nil?
-      marcar.call(1, "Data de vencimento invalida. Titulo Marcado como Irregular")
+      marcar.call(50, "Data de vencimento invalida. Titulo Marcado como Irregular")
       dt_vencto = dt_emissao
     elsif dt_vencto > Date.current
       marcar.call(1, "Data de vencimento maior que apresentação. Titulo Marcado como Irregular")
