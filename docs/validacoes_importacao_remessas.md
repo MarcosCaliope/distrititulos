@@ -22,28 +22,47 @@ Checadas em `validar_estrutura!`, nesta ordem:
 3. **Sequencial fora de ordem** — posição 597–600 de cada linha deve ser igual ao número da
    linha (1, 2, 3, ...).
 4. **Primeira linha não é header** — posição 1 da primeira linha deve ser `"0"`.
-5. **Apresentante/banco não cadastrado** — código de compensação do header (posição 2–4)
-   precisa resolver para um `Apresentante`: primeiro busca `cad_bancos` por `codigo` (se o
-   código for só dígitos) ou por `codalfa` (senão), depois usa `cad_bancos.cd2` para achar
-   `cad_apresenta.codigo`. Falha se o banco não existe, ou existe mas não tem `cd2`, ou o
-   apresentante correspondente não existe.
-6. **Arquivo já importado** — já existe alguma `Remessa` com esse `snomearquivotexto`. (É essa
+5. **Apresentante não cadastrado** — código de compensação do header (posição 2–4) precisa
+   resolver para um `Apresentante` cujo `cad_apresenta.scodcompensacao` seja igual a esse
+   código (ver [Como o apresentante é localizado](#como-o-apresentante-é-localizado) abaixo).
+6. **Empresa não cadastrada** — precisa existir uma linha em `cad_empresa` (usada para decidir
+   o valor de `titulo.cod_apr`, ver abaixo). Sem isso a importação não roda.
+7. **Arquivo já importado** — já existe alguma `Remessa` com esse `snomearquivotexto`. (É essa
    verificação que a tela de "cancelar importação" existe para reverter.)
-7. **Linha do meio não é tipo `1`** — toda linha entre a primeira e a última deve ser um
+8. **Linha do meio não é tipo `1`** — toda linha entre a primeira e a última deve ser um
    registro de título/transação.
-8. **Portador divergente (transação)** — posição 2–4 de uma linha do meio diferente do
+9. **Portador divergente (transação)** — posição 2–4 de uma linha do meio diferente do
    portador do header.
-9. **Última linha não é trailer** — posição 1 da última linha deve ser `"9"`.
-10. **Contagem de títulos divergente** — quantidade de linhas titulares (posição 297 = `"1"`)
+10. **Última linha não é trailer** — posição 1 da última linha deve ser `"9"`.
+11. **Contagem de títulos divergente** — quantidade de linhas titulares (posição 297 = `"1"`)
     diferente do valor declarado no header (posição 72–75).
-11. **Contagem de indicações divergente** — dentre os títulos, quantos têm espécie em
+12. **Contagem de indicações divergente** — dentre os títulos, quantos têm espécie em
     `DMI`/`DRI`/`CBI` (posição 214–216), comparado ao header (posição 76–79).
-12. **Contagem de originais divergente** — o restante dos títulos (não-indicação), comparado
+13. **Contagem de originais divergente** — o restante dos títulos (não-indicação), comparado
     ao header (posição 80–83).
-13. **Portador divergente (trailer)** — posição 2–4 do trailer diferente do portador do
+14. **Portador divergente (trailer)** — posição 2–4 do trailer diferente do portador do
     header.
-14. **Soma de segurança divergente** — posição 53–57 do trailer deve ser igual a
+15. **Soma de segurança divergente** — posição 53–57 do trailer deve ser igual a
     `qtd_transacao + qtd_titulos + qtd_indicacoes + qtd_originais`.
+
+## Como o apresentante é localizado
+
+`RemessaImporter#resolver_apresentante` busca `Apresentante.find_by(scodcompensacao:
+codigo_compensacao)`, onde `codigo_compensacao` é a posição 2–4 do header (código numérico ou
+alfanumérico do banco/apresentante). `cad_apresenta.scodcompensacao` já é o código de
+compensação resolvido para cada apresentante (numérico ou `codalfa`, o que existir — ver
+`docs/manutencao_dados.md`), então essa é uma busca direta, sem passar por `cad_bancos`.
+
+## `titulo.cod_apr`
+
+O valor gravado em `cad_titulos.cod_apr` depende do município da empresa (`cad_empresa`,
+única linha, ver `docs/manutencao_dados.md`/CRUD de Empresas):
+
+- Se `cad_empresa.scodmunicipio` for `"2304400"` (código IBGE de Fortaleza-CE — o município da
+  própria empresa) — `cod_apr` recebe `apresentante.codigo`.
+- Em qualquer outro município — `cod_apr` recebe `apresentante.scodcompensacao`.
+
+Calculado uma única vez por arquivo (a partir do apresentante do header), não por título.
 
 ## Validações por título
 

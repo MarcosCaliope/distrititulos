@@ -66,14 +66,19 @@ Layout validado campo a campo contra um arquivo real de amostra
 ## Validações
 
 Lista completa (estruturais, que abortam a importação inteira, e por título, que só marcam o
-título como irregular) em `docs/validacoes_importacao_remessas.md`. Resumo: 14 validações
+título como irregular) em `docs/validacoes_importacao_remessas.md`. Resumo: 15 validações
 estruturais (arquivo vazio, caractere não-ASCII, sequência de linhas, tipos de registro,
-apresentante não cadastrado, arquivo já importado, contagens/soma de segurança do
-header/trailer) e 13 validações por título (espécie, CPF/CNPJ do devedor e do sacador,
-número do título, endereço, datas de emissão/vencimento, nome do devedor, praça/cidade, e
-falência em CPF). Descrições oficiais dos códigos de irregularidade: tabela própria
-`irregularidades` (não a `distribuidor.irregularidades`, que pertence a outra aplicação —
-copiamos os 70 códigos de lá uma única vez para termos uma tabela independente).
+apresentante não cadastrado, empresa não cadastrada, arquivo já importado, contagens/soma de
+segurança do header/trailer) e 13 validações por título (espécie, CPF/CNPJ do devedor e do
+sacador, número do título, endereço, datas de emissão/vencimento, nome do devedor,
+praça/cidade, e falência em CPF). Descrições oficiais dos códigos de irregularidade: tabela
+própria `irregularidades` (não a `distribuidor.irregularidades`, que pertence a outra
+aplicação — copiamos os 70 códigos de lá uma única vez para termos uma tabela independente).
+
+O apresentante do header é localizado por `cad_apresenta.scodcompensacao` (não mais via
+`cad_bancos`), e o `cad_titulos.cod_apr` gravado em cada título depende do município da
+empresa (`cad_empresa`) — ver `docs/validacoes_importacao_remessas.md` para os detalhes de
+ambos.
 
 ## O que é gravado
 

@@ -18,6 +18,7 @@ class RemessaImporter
   end
 
   CIDADE_EMPRESA = "FORTALEZA"
+  CODMUNICIPIO_EMPRESA_COD_APR_PROPRIO = "2304400"
   APRESENTANTE_SEM_REGRA_PRACA = "073"
   ESPECIES_INDICACAO = %w[DMI DRI CBI].freeze
 
@@ -90,6 +91,14 @@ class RemessaImporter
     end
     @apresentante = apresentante
 
+    empresa = Empresa.take
+    falha!("Importação falhou - Empresa não cadastrada. Cadastre a Empresa antes de importar remessas") unless empresa
+    @cod_apr = if empresa.scodmunicipio == CODMUNICIPIO_EMPRESA_COD_APR_PROPRIO
+      @apresentante.codigo
+    else
+      @apresentante.scodcompensacao
+    end
+
     if Remessa.exists?(snomearquivotexto: @filename)
       falha!("Este arquivo de remessa já foi importado. Para importá-lo novamente você deve cancelar a importação anterior")
     end
@@ -158,14 +167,7 @@ class RemessaImporter
   end
 
   def resolver_apresentante(codigo_compensacao)
-    banco = if codigo_compensacao.match?(/\A\d+\z/)
-      Banco.find_by(codigo: codigo_compensacao)
-    else
-      Banco.find_by(codalfa: codigo_compensacao)
-    end
-    return nil if banco.nil? || banco.cd2.blank?
-
-    Apresentante.find_by(codigo: banco.cd2)
+    Apresentante.find_by(scodcompensacao: codigo_compensacao)
   end
 
   # --- Importação de fato ---------------------------------------------------
@@ -229,7 +231,7 @@ class RemessaImporter
       dat_venc: criticas[:dt_vencto],
       dat_rece: Date.current,
       valor: campo(linha, 247, 14).to_i / 100.0,
-      cod_apr: @apresentante.codigo,
+      cod_apr: @cod_apr,
       nome_apr: @apresentante.nome,
       devedor: devedor.nome,
       protocolo: protocolo,
