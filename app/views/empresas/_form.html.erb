@@ -1,0 +1,149 @@
+<%= form_with model: empresa do |f| %>
+  <% if empresa.errors.any? %>
+    <div class="alert alert-danger">
+      <h2 class="h5"><%= pluralize(empresa.errors.count, "erro") %> impediram o salvamento:</h2>
+      <ul class="mb-0">
+        <% empresa.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :emp_id, "ID", class: "form-label" %>
+    <%= f.text_field :emp_id, maxlength: 1, readonly: empresa.persisted?, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :snome, "Nome", class: "form-label" %>
+    <%= f.text_field :snome, maxlength: 100, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sfantasia, "Nome fantasia", class: "form-label" %>
+    <%= f.text_field :sfantasia, maxlength: 30, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scnpj, "CNPJ", class: "form-label" %>
+    <%= f.text_field :scnpj, maxlength: 18, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sendereco, "Endereço", class: "form-label" %>
+    <%= f.text_field :sendereco, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sbairro, "Bairro", class: "form-label" %>
+    <%= f.text_field :sbairro, maxlength: 30, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scidade, "Cidade", class: "form-label" %>
+    <%= f.text_field :scidade, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sestado, "Estado", class: "form-label" %>
+    <%= f.text_field :sestado, maxlength: 2, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scep, "CEP", class: "form-label" %>
+    <%= f.text_field :scep, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scodmunicipio, "Código do município", class: "form-label" %>
+    <%= f.text_field :scodmunicipio, maxlength: 7, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sfone, "Fone", class: "form-label" %>
+    <%= f.text_field :sfone, maxlength: 20, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :semail, "E-mail", class: "form-label" %>
+    <%= f.text_field :semail, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sweb, "Site", class: "form-label" %>
+    <%= f.text_field :sweb, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :snomeresponsavel, "Responsável", class: "form-label" %>
+    <%= f.text_field :snomeresponsavel, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :scpfresponsavel, "CPF do responsável", class: "form-label" %>
+    <%= f.text_field :scpfresponsavel, maxlength: 14, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :snomesubstituto, "Substituto", class: "form-label" %>
+    <%= f.text_field :snomesubstituto, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :inooficio, "Número do ofício", class: "form-label" %>
+    <%= f.number_field :inooficio, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :stitulo, "Título", class: "form-label" %>
+    <%= f.text_field :stitulo, maxlength: 50, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :spathlogo, "Caminho do logo", class: "form-label" %>
+    <%= f.text_field :spathlogo, maxlength: 100, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :spatharquivos, "Caminho dos arquivos", class: "form-label" %>
+    <%= f.text_field :spatharquivos, maxlength: 100, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :imodeloctd, "Modelo CTD", class: "form-label" %>
+    <%= f.number_field :imodeloctd, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :snolivro, "Nº do livro", class: "form-label" %>
+    <%= f.text_field :snolivro, maxlength: 5, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ifolha, "Folha", class: "form-label" %>
+    <%= f.number_field :ifolha, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :iqtdefolhas, "Quantidade de folhas", class: "form-label" %>
+    <%= f.number_field :iqtdefolhas, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :iqtdetitulosporfolha, "Títulos por folha", class: "form-label" %>
+    <%= f.number_field :iqtdetitulosporfolha, class: "form-control" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= f.check_box :binseretitulorejeitado, class: "form-check-input" %>
+    <%= f.label :binseretitulorejeitado, "Insere título rejeitado", class: "form-check-label" %>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= f.check_box :bselodigital, class: "form-check-input" %>
+    <%= f.label :bselodigital, "Selo digital", class: "form-check-label" %>
+  </div>
+
+  <%= f.submit class: "btn btn-primary" %>
+<% end %>

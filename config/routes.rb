@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :apresentantes
   resources :bancos
   resources :devedores
+  resources :empresas
   resources :devedor_solidarios
   resources :distribuidores
   resources :especies

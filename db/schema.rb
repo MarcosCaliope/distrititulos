@@ -85,6 +85,35 @@ ActiveRecord::Schema[8.0].define(version: 0) do
     t.boolean "blivre"
   end
 
+  create_table "cad_empresa", primary_key: "emp_id", id: { type: :string, limit: 1 }, force: :cascade do |t|
+    t.string "snome", limit: 100
+    t.string "sfantasia", limit: 30
+    t.string "sendereco", limit: 50
+    t.string "sbairro", limit: 30
+    t.string "scidade", limit: 50
+    t.string "sestado", limit: 2
+    t.string "scep", limit: 10
+    t.string "scnpj", limit: 18
+    t.string "sfone", limit: 20
+    t.string "semail", limit: 50
+    t.string "sweb", limit: 50
+    t.string "snomeresponsavel", limit: 50
+    t.string "scpfresponsavel", limit: 14
+    t.string "snomesubstituto", limit: 50
+    t.string "spathlogo", limit: 100
+    t.integer "inooficio"
+    t.string "stitulo", limit: 50
+    t.string "spatharquivos", limit: 100
+    t.integer "imodeloctd"
+    t.string "snolivro", limit: 5
+    t.integer "ifolha"
+    t.integer "iqtdefolhas"
+    t.integer "iqtdetitulosporfolha"
+    t.boolean "binseretitulorejeitado"
+    t.string "scodmunicipio", limit: 7
+    t.boolean "bselodigital"
+  end
+
   create_table "cad_especies", primary_key: "codigo", id: { type: :string, limit: 3 }, force: :cascade do |t|
     t.string "descricao", limit: 40
     t.string "cd2", limit: 2

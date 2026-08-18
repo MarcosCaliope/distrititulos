@@ -1,0 +1,39 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0"><%= @empresa.snome %></h1>
+  <div>
+    <%= link_to "Editar", edit_empresa_path(@empresa), class: "btn btn-primary" %>
+    <%= link_to "Voltar", empresas_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<div class="card">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item"><strong>ID:</strong> <%= @empresa.emp_id %></li>
+    <li class="list-group-item"><strong>Nome:</strong> <%= @empresa.snome %></li>
+    <li class="list-group-item"><strong>Nome fantasia:</strong> <%= @empresa.sfantasia %></li>
+    <li class="list-group-item"><strong>CNPJ:</strong> <%= @empresa.scnpj %></li>
+    <li class="list-group-item"><strong>Endereço:</strong> <%= @empresa.sendereco %></li>
+    <li class="list-group-item"><strong>Bairro:</strong> <%= @empresa.sbairro %></li>
+    <li class="list-group-item"><strong>Cidade:</strong> <%= @empresa.scidade %></li>
+    <li class="list-group-item"><strong>Estado:</strong> <%= @empresa.sestado %></li>
+    <li class="list-group-item"><strong>CEP:</strong> <%= @empresa.scep %></li>
+    <li class="list-group-item"><strong>Código do município:</strong> <%= @empresa.scodmunicipio %></li>
+    <li class="list-group-item"><strong>Fone:</strong> <%= @empresa.sfone %></li>
+    <li class="list-group-item"><strong>E-mail:</strong> <%= @empresa.semail %></li>
+    <li class="list-group-item"><strong>Site:</strong> <%= @empresa.sweb %></li>
+    <li class="list-group-item"><strong>Responsável:</strong> <%= @empresa.snomeresponsavel %></li>
+    <li class="list-group-item"><strong>CPF do responsável:</strong> <%= @empresa.scpfresponsavel %></li>
+    <li class="list-group-item"><strong>Substituto:</strong> <%= @empresa.snomesubstituto %></li>
+    <li class="list-group-item"><strong>Número do ofício:</strong> <%= @empresa.inooficio %></li>
+    <li class="list-group-item"><strong>Título:</strong> <%= @empresa.stitulo %></li>
+    <li class="list-group-item"><strong>Caminho do logo:</strong> <%= @empresa.spathlogo %></li>
+    <li class="list-group-item"><strong>Caminho dos arquivos:</strong> <%= @empresa.spatharquivos %></li>
+    <li class="list-group-item"><strong>Modelo CTD:</strong> <%= @empresa.imodeloctd %></li>
+    <li class="list-group-item"><strong>Nº do livro:</strong> <%= @empresa.snolivro %></li>
+    <li class="list-group-item"><strong>Folha:</strong> <%= @empresa.ifolha %></li>
+    <li class="list-group-item"><strong>Quantidade de folhas:</strong> <%= @empresa.iqtdefolhas %></li>
+    <li class="list-group-item"><strong>Títulos por folha:</strong> <%= @empresa.iqtdetitulosporfolha %></li>
+    <li class="list-group-item"><strong>Insere título rejeitado:</strong> <%= @empresa.binseretitulorejeitado ? "Sim" : "Não" %></li>
+    <li class="list-group-item"><strong>Selo digital:</strong> <%= @empresa.bselodigital ? "Sim" : "Não" %></li>
+  </ul>
+</div>
