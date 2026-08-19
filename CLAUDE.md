@@ -42,6 +42,7 @@ joined key contains the delimiter (see the `:remessas` route).
 bin/setup                          # install deps, prepare db, start server
 bin/rails server                   # run the app
 bin/rails console
+bin/jobs                           # run the Solid Queue worker (needed for remessa imports, which run as a background job)
 
 bin/rails test                     # run unit/integration tests
 bin/rails test:system              # run system tests (Capybara + headless Chrome)
@@ -105,7 +106,7 @@ placeholders), so there's no existing test to pattern-match against yet.
   execute on `DELETE` if the user retypes the year/filename as confirmation. Follow this
   two-step pattern for any other bulk/irreversible delete.
 - **Remessa import** (`app/services/remessa_importer.rb`) is a plain service object (not a
-  model/job) that ports `frmImpTitulos.frm` from the legacy VB6 system: parses a 600-column
+  model) that ports `frmImpTitulos.frm` from the legacy VB6 system: parses a 600-column
   fixed-width file, runs structural validations that abort the whole import (nothing is
   written) if they fail, then per-título validations ("críticas") that don't abort — they just
   mark that título irregular (`tipo_tit = "*"`, `icodirregularidade` set) and keep going, same
@@ -119,3 +120,10 @@ placeholders), so there's no existing test to pattern-match against yet.
   resolved by `cad_apresenta.scodcompensacao` (not via `cad_bancos`), and the `cod_apr` written
   to every título depends on whether `cad_empresa.scodmunicipio` is Fortaleza-CE's IBGE code
   (`2304400`) or not, computed once per file from the header's apresentante.
+  `RemessaImportsController#create` doesn't call the importer inline: it generates a UUID
+  (`RemessaImportProgress.build_id`), enqueues `RemessaImportJob.perform_later(id, filename,
+  content)` (Active Job on Solid Queue), and redirects immediately to `show`, so uploading a
+  large file doesn't block the request. The job passes an `on_progress:` callback into
+  `RemessaImporter`, which `RemessaImportProgress` (`app/services/remessa_import_progress.rb`)
+  uses to persist state in `Rails.cache` (survives a page reload) and broadcast live updates
+  over Turbo Streams/Solid Cable to the open `show` page.
