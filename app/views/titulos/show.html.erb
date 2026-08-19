@@ -70,7 +70,12 @@
   <ul class="list-group list-group-flush">
     <li class="list-group-item"><strong>Arquivo texto:</strong> <%= @titulo.snomearquivotexto %></li>
     <li class="list-group-item"><strong>Tipo de ocorrência:</strong> <%= @titulo.stipoocorrencia %></li>
-    <li class="list-group-item"><strong>Código irregularidade:</strong> <%= @titulo.icodirregularidade %></li>
+    <li class="list-group-item">
+      <strong>Código irregularidade:</strong> <%= @titulo.icodirregularidade %>
+      <% if @titulo.icodirregularidade.present? %>
+        <span class="text-muted">— <%= Irregularidade.find_by(codigo: @titulo.icodirregularidade)&.descricao || "código não cadastrado" %></span>
+      <% end %>
+    </li>
     <li class="list-group-item"><strong>ISQL:</strong> <%= @titulo.isql %></li>
     <li class="list-group-item"><strong>Efeito falência:</strong> <%= @titulo.sefeitofalencia %></li>
   </ul>

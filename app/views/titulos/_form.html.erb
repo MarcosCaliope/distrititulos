@@ -179,7 +179,12 @@
 
   <div class="mb-3">
     <%= f.label :icodirregularidade, "Código irregularidade", class: "form-label" %>
-    <%= f.number_field :icodirregularidade, class: "form-control" %>
+    <div class="d-flex align-items-center gap-2">
+      <%= f.number_field :icodirregularidade, class: "form-control", style: "max-width: 8rem;" %>
+      <% if titulo.icodirregularidade.present? %>
+        <span class="text-muted"><%= Irregularidade.find_by(codigo: titulo.icodirregularidade)&.descricao || "código não cadastrado" %></span>
+      <% end %>
+    </div>
   </div>
 
   <div class="mb-3">
