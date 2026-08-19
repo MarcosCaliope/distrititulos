@@ -47,6 +47,6 @@ class DistribuidoresController < ApplicationController
   end
 
   def distribuidor_params
-    params.require(:distribuidor).permit(:dis_id, :dis_cartorio, :blivre)
+    params.require(:distribuidor).permit(:dis_id, :dis_cartorio, :blivre, :participa_sorteio)
   end
 end

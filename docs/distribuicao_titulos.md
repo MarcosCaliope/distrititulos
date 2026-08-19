@@ -31,13 +31,19 @@ que:
    `climitesuperior`), sorteia uma linha livre da grade dentro dessa faixa e usa o cartório/
    distribuidor sorteados para regravar o título.
 
-Duas regras do legado que **foram mantidas deliberadamente**, e que não são óbvias a partir
-do cadastro atual:
+Duas regras do legado que **foram mantidas deliberadamente**:
 
-- Só participam do sorteio os `cad_distribuidor` com `dis_id < '3'` — hoje existem 3
-  distribuidores cadastrados (`1`, `2`, `3`), mas o `3` (CANUTO) fica de fora, igual ao
-  legado (`BuscaDistribuidor`/`CriaDistribuicao`).
-- Só participam `cad_protesto` com `ativa_sc_titulos = true`.
+- Só participam do sorteio os `cad_distribuidor` com `participa_sorteio = true` — coluna
+  adicionada em `cad_distribuidor` especificamente para isso (não existia no legado, que
+  tinha essa regra fixa no código como `dis_id < '3'` em `BuscaDistribuidor`/
+  `CriaDistribuicao`). Hoje existem 3 distribuidores cadastrados (`1`, `2`, `3`); só `1` e
+  `2` têm `participa_sorteio = true` (mesmo resultado da regra fixa do legado), e o `3`
+  (CANUTO) fica de fora — mas agora isso é editável no cadastro de Distribuidores
+  (`app/views/distribuidores/_form.html.erb`), não fixo no código. Se nenhum distribuidor
+  estiver marcado, `DistribuicaoTitulos` recusa o processamento com uma mensagem amigável em
+  vez de sortear sobre uma grade vazia.
+- Só participam `cad_protesto` com `ativa_sc_titulos = true` (mesma validação amigável se
+  nenhum cartório estiver ativo).
 
 Uma parte do form **não foi portada**: o legado também sorteava um cartório em paralelo via
 `BuscaCartorio`/`cad_protesto.blivre`, mas o resultado desse sorteio (`strCart`) nunca era

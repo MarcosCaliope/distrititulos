@@ -19,6 +19,7 @@
         <th>ID</th>
         <th>Cartório</th>
         <th>Livre</th>
+        <th>Participa do sorteio</th>
         <th class="text-end">Ações</th>
       </tr>
     </thead>
@@ -28,6 +29,7 @@
           <td><%= distribuidor.dis_id %></td>
           <td><%= link_to distribuidor.dis_cartorio, distribuidor %></td>
           <td><%= distribuidor.blivre ? "Sim" : "Não" %></td>
+          <td><%= distribuidor.participa_sorteio ? "Sim" : "Não" %></td>
           <td class="text-end">
             <%= link_to "Editar", edit_distribuidor_path(distribuidor), class: "btn btn-sm btn-outline-secondary" %>
             <%= link_to "Remover", distribuidor, data: { turbo_method: :delete, turbo_confirm: "Remover #{distribuidor.dis_cartorio}?" }, class: "btn btn-sm btn-outline-danger" %>

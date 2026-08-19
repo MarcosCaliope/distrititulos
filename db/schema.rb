@@ -83,6 +83,7 @@ ActiveRecord::Schema[8.0].define(version: 0) do
   create_table "cad_distribuidor", primary_key: "dis_id", id: { type: :string, limit: 1 }, force: :cascade do |t|
     t.string "dis_cartorio", limit: 40, null: false
     t.boolean "blivre"
+    t.boolean "participa_sorteio", default: false
   end
 
   create_table "cad_empresa", primary_key: "emp_id", id: { type: :string, limit: 1 }, force: :cascade do |t|

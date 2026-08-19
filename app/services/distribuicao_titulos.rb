@@ -10,21 +10,19 @@
 # distribuição é herdado da distribuição anterior mais recente para a mesma combinação
 # cartório/distribuidor/faixa, para não reiniciar o round-robin a cada dia.
 #
-# Só participam cad_distribuidor com dis_id < "3" e cad_protesto com ativa_sc_titulos = true
-# — mesma regra do formulário legado (BuscaDistribuidor/CriaDistribuicao), preservada
-# deliberadamente: o cadastro pode ter mais distribuidores/cartórios do que os habilitados a
-# participar do sorteio. Não porta o sorteio paralelo do legado via BuscaCartorio/
-# cad_protesto.blivre — no VB6 esse sorteio grava um efeito colateral no banco mas seu
-# resultado nunca é usado para decidir o cartório do título (isso vem da grade acima); é
-# código morto de uma versão anterior do formulário.
+# Só participam cad_distribuidor com participa_sorteio = true e cad_protesto com
+# ativa_sc_titulos = true — o cadastro pode ter mais distribuidores/cartórios do que os
+# habilitados a participar do sorteio (no formulário legado essa regra era um dis_id < "3"
+# fixo no código; aqui virou uma flag editável no cadastro de Distribuidores). Não porta o
+# sorteio paralelo do legado via BuscaCartorio/cad_protesto.blivre — no VB6 esse sorteio
+# grava um efeito colateral no banco mas seu resultado nunca é usado para decidir o cartório
+# do título (isso vem da grade acima); é código morto de uma versão anterior do formulário.
 class DistribuicaoTitulos
   Result = Struct.new(:success, :errors, :titulos_distribuidos_count, keyword_init: true) do
     def success?
       success
     end
   end
-
-  DISTRIBUIDORES_PARTICIPANTES = "dis_id < '3'"
 
   def initialize(dat_recebimento:, dat_distribuicao:)
     @dat_recebimento = parse_data(dat_recebimento)
@@ -57,6 +55,8 @@ class DistribuicaoTitulos
     return [ "Data de distribuição inválida." ] if @dat_distribuicao.nil?
     return [ "Data de recebimento maior que a data de distribuição." ] if @dat_recebimento > @dat_distribuicao
     return [ "Não foram recebidos títulos válidos nesta data." ] unless titulos_pendentes.exists?
+    return [ "Nenhum distribuidor está habilitado a participar do sorteio (cadastro de Distribuidores)." ] unless Distribuidor.where(participa_sorteio: true).exists?
+    return [ "Nenhum cartório está ativo para distribuição de títulos (cadastro de Protestos)." ] unless Protesto.where(ativa_sc_titulos: true).exists?
 
     []
   end
@@ -70,7 +70,7 @@ class DistribuicaoTitulos
   def criar_grade_se_necessaria
     return if Distribuicao.where(dtdistribuicao: @dat_distribuicao).exists?
 
-    distribuidores = Distribuidor.where(DISTRIBUIDORES_PARTICIPANTES).order(:dis_id)
+    distribuidores = Distribuidor.where(participa_sorteio: true).order(:dis_id)
     cartorios = Protesto.where(ativa_sc_titulos: true)
     faixas = Faixa.all
 
