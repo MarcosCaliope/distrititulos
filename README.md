@@ -32,6 +32,9 @@ padrão (listar com busca, ver, criar, editar, remover) para cada um.
   remessa de largura fixa enviado por bancos/apresentantes, valida a estrutura e grava
   títulos/devedores/devedores solidários/remessas). Detalhes completos em
   `docs/importacao_remessas.md`.
+- **Distribuição de títulos** — porta do processo de sorteio de cartório/distribuidor do
+  sistema legado (sorteia entre os títulos recebidos numa data e regrava o protocolo de
+  cada um), com uma ação de desfazer. Detalhes completos em `docs/distribuicao_titulos.md`.
 
 ## Rodando localmente
 
@@ -55,6 +58,8 @@ detalhes de configuração deste ambiente específico.
   banco (fora do controle de versão).
 - `docs/devedores_solidarios_no_titulo.md` — gestão de devedores solidários a partir da
   página do título e o rótulo "Dev.Sol." na listagem de títulos.
+- `docs/distribuicao_titulos.md` — sorteio de cartório/distribuidor para títulos recebidos,
+  a grade de sorteio (`tbldistribuicao`) e o desfazer.
 
 ## Notas de performance
 

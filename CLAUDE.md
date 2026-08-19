@@ -26,6 +26,10 @@ Processos (the actual business workflow):
   fixed-width remessa file sent by a bank/apresentante, validates it, and writes
   títulos/devedores/devedor_solidarios/remessas. See "Remessa import" below and
   `docs/importacao_remessas.md`.
+- **Distribuição de títulos** — ports the legacy VB6 random cartório/distribuidor draw
+  (`frmDistribuicaoNew.frm`): for títulos received on a date, draws a cartório/distribuidor
+  via a round-robin grid (`tbldistribuicao`) balanced by faixa de valor, and rewrites the
+  título's `protocolo`. See `docs/distribuicao_titulos.md`.
 
 When adding a model for one of the still-unmapped legacy tables, follow the pattern in
 `app/models/*.rb`: set `self.table_name` and `self.primary_key` explicitly. Composite primary

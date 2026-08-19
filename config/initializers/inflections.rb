@@ -19,4 +19,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular "devedor", "devedores"
   inflect.irregular "distribuidor", "distribuidores"
   inflect.irregular "especie", "especies"
+  inflect.irregular "distribuicao", "distribuicoes"
 end

@@ -1,0 +1,26 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Distribuição de títulos</h1>
+  <div>
+    <%= link_to "Desfazer uma distribuição", desfazer_distribuicoes_path, class: "btn btn-outline-danger" %>
+    <%= link_to "Voltar", titulos_path, class: "btn btn-outline-secondary" %>
+  </div>
+</div>
+
+<p class="text-muted">
+  Sorteia cartório e distribuidor para todos os títulos recebidos na data informada que ainda
+  não foram distribuídos, e regrava o protocolo de cada um.
+</p>
+
+<%= form_with url: distribuicoes_path, method: :post, class: "row g-2" do %>
+  <div class="col-auto">
+    <%= label_tag :dat_recebimento, "Data de recebimento", class: "form-label" %>
+    <%= date_field_tag :dat_recebimento, @dat_recebimento, class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= label_tag :dat_distribuicao, "Data de distribuição", class: "form-label" %>
+    <%= date_field_tag :dat_distribuicao, @dat_distribuicao, class: "form-control" %>
+  </div>
+  <div class="col-auto d-flex align-items-end">
+    <%= submit_tag "Processar", class: "btn btn-primary", data: { turbo_confirm: "Confirma a distribuição dos títulos recebidos nesta data? A ação reescreve o protocolo de cada título." } %>
+  </div>
+<% end %>

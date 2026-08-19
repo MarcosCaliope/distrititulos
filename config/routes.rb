@@ -36,6 +36,12 @@ Rails.application.routes.draw do
       delete :cancel
     end
   end
+  resources :distribuicoes, only: %i[new create] do
+    collection do
+      get :desfazer
+      delete :desfazer
+    end
+  end
 
   # Defines the root path route ("/")
   root "home#index"

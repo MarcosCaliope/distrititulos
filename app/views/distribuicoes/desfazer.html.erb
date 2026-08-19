@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Desfazer distribuição de títulos</h1>
+  <%= link_to "Voltar", new_distribuicao_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<p class="text-muted">
+  Restaura os títulos distribuídos numa data: remove o prefixo do protocolo e limpa cartório,
+  distribuidor e data de distribuição. Ação irreversível.
+</p>
+
+<%= form_with url: desfazer_distribuicoes_path, method: :get, class: "row g-2 mb-4" do %>
+  <div class="col-auto">
+    <%= label_tag :dat_distribuicao, "Data de distribuição", class: "visually-hidden" %>
+    <%= date_field_tag :dat_distribuicao, @dat_distribuicao, class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= submit_tag "Consultar", class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>
+
+<% if @dat_distribuicao %>
+  <div class="alert alert-warning">
+    <strong><%= @titulos_count %></strong> título(s) terão a distribuição desfeita para <%= @dat_distribuicao %>.
+  </div>
+
+  <% if @titulos_count.positive? %>
+    <%= form_with url: desfazer_distribuicoes_path, method: :delete do |f| %>
+      <%= f.hidden_field :dat_distribuicao, value: @dat_distribuicao %>
+      <div class="mb-3">
+        <%= label_tag :confirm_data, "Digite \"#{@dat_distribuicao}\" novamente para confirmar", class: "form-label" %>
+        <%= text_field_tag :confirm_data, nil, class: "form-control", style: "max-width: 200px" %>
+      </div>
+      <%= f.submit "Confirmar desfazer distribuição de #{@titulos_count} título(s)", class: "btn btn-danger", data: { turbo_confirm: "Tem certeza? Isso vai desfazer a distribuição de #{@titulos_count} título(s) de #{@dat_distribuicao}. Essa ação não pode ser desfeita." } %>
+    <% end %>
+  <% end %>
+<% end %>
