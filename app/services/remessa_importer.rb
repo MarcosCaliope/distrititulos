@@ -11,7 +11,7 @@
 class RemessaImporter
   class ImportError < StandardError; end
 
-  Result = Struct.new(:success, :log, :titulos_count, keyword_init: true) do
+  Result = Struct.new(:success, :log, :titulos_count, :titulos_rejeitados_count, keyword_init: true) do
     def success?
       success
     end
@@ -22,28 +22,36 @@ class RemessaImporter
   APRESENTANTE_SEM_REGRA_PRACA = "073"
   ESPECIES_INDICACAO = %w[DMI DRI CBI].freeze
 
-  def initialize(filename:, content:)
+  # on_progress, if given, is called after every log line with
+  # (log: mensagem, processed: linhas já processadas, total: total de linhas do arquivo).
+  def initialize(filename:, content:, on_progress: nil)
     @filename = filename
     @content = content.to_s
     @log = []
     @titulos_count = 0
+    @on_progress = on_progress
+    @total_linhas = 0
+    @processed_linhas = 0
   end
 
   def call
     ActiveRecord::Base.transaction do
       linhas = parse_linhas
+      @total_linhas = linhas.size
       validar_estrutura!(linhas)
       importar!(linhas)
     end
-    Result.new(success: true, log: @log, titulos_count: @titulos_count)
+    titulos_rejeitados_count = Titulo.where(snomearquivotexto: @filename, tipo_tit: "*").count
+    Result.new(success: true, log: @log, titulos_count: @titulos_count, titulos_rejeitados_count: titulos_rejeitados_count)
   rescue ImportError
-    Result.new(success: false, log: @log, titulos_count: 0)
+    Result.new(success: false, log: @log, titulos_count: 0, titulos_rejeitados_count: 0)
   end
 
   private
 
   def grava_log(mensagem)
     @log << mensagem
+    @on_progress&.call(log: mensagem, processed: @processed_linhas, total: @total_linhas)
   end
 
   def falha!(mensagem)
@@ -178,6 +186,7 @@ class RemessaImporter
     linhas.each_with_index do |linha, index|
       tipo = campo(linha, 1, 1)
       sequencial = campo(linha, 597, 4).to_i
+      @processed_linhas = index + 1
 
       case tipo
       when "0"

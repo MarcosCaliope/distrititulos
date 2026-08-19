@@ -10,8 +10,14 @@ class RemessaImportsController < ApplicationController
       return
     end
 
-    @filename = file.original_filename
-    @result = RemessaImporter.new(filename: @filename, content: file.read).call
+    id = RemessaImportProgress.build_id
+    RemessaImportJob.perform_later(id, file.original_filename, file.read)
+    redirect_to remessa_import_path(id)
+  end
+
+  def show
+    @id = params[:id]
+    @state = RemessaImportProgress.new(@id).state
   end
 
   # Shows how many rows a given remessa filename would remove, before confirming.

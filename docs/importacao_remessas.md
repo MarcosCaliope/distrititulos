@@ -9,11 +9,38 @@ histórico de remessa no banco.
 ## Onde fica
 
 - `app/services/remessa_importer.rb` — toda a lógica de parsing/validação/gravação.
-- `app/controllers/remessa_imports_controller.rb` — upload (`new`/`create`) e cancelamento
-  de uma importação (`cancel`, GET mostra contagem, DELETE confirma e apaga).
+- `app/jobs/remessa_import_job.rb` — roda o `RemessaImporter` em background (Active Job /
+  Solid Queue) para não bloquear a requisição HTTP.
+- `app/services/remessa_import_progress.rb` — guarda o estado da importação em andamento
+  (`Rails.cache`, expira em 1h) e transmite as atualizações via Turbo Streams/Solid Cable
+  para a tela aberta.
+- `app/controllers/remessa_imports_controller.rb` — upload (`new`/`create`, que só enfileira
+  o job e redireciona), acompanhamento (`show`) e cancelamento de uma importação (`cancel`,
+  GET mostra contagem, DELETE confirma e apaga).
 - `app/views/remessa_imports/`
-- Rotas: `resources :remessa_imports, only: %i[new create]` + `collection { get/delete :cancel }`
+- Rotas: `resources :remessa_imports, only: %i[new create show]` + `collection { get/delete :cancel }`
 - Acesso pela UI: menu "Importar remessa" / aba "Processos" na home.
+
+## Andamento em tempo real
+
+`create` gera um `id` (`RemessaImportProgress.build_id`, um UUID), enfileira
+`RemessaImportJob.perform_later(id, filename, content)` e redireciona para
+`/remessa_imports/:id` — a requisição HTTP não fica bloqueada esperando o arquivo inteiro
+processar. A página `show` abre uma stream Turbo (`turbo_stream_from "remessa_import_#{id}"`)
+e renderiza o estado já salvo em cache (útil se a página for recarregada/reaberta no meio do
+processamento).
+
+Dentro do job, `RemessaImporter` recebe um `on_progress:` que é chamado a cada linha de log
+(`grava_log`) com `processed`/`total` (linhas do arquivo). `RemessaImportProgress` usa isso
+para: (1) regravar o estado no cache, (2) `broadcast_replace_to` a barra de progresso/resumo
+(partial `_progress.html.erb`) e (3) `broadcast_append_to` a linha de log (partial
+`_log_line.html.erb`) — quem estiver com a página aberta vê tudo ao vivo, sem recarregar.
+
+Ao final, `RemessaImporter#call` também calcula `titulos_rejeitados_count` (títulos gravados
+com `tipo_tit = "*"`, ou seja, marcados irregulares por alguma crítica) contando direto na
+tabela após o commit — não dá pra somar isso durante o loop porque uma linha de devedor
+solidário pode marcar como irregular um título que já tinha sido gravado como OK antes (ver
+"O que é gravado" abaixo). O resumo final mostra título(s) importado(s) vs rejeitado(s).
 
 ## Layout do arquivo
 
@@ -114,3 +141,12 @@ devedores solidários seriam apagados, exige digitar o nome do arquivo de novo p
 - Fluxo HTTP completo (upload multipart, tela de erro, tela de cancelamento) testado só com
   o arquivo adulterado e consultas de contagem — nenhuma importação bem-sucedida foi
   executada de fato via HTTP, para não gravar dados reais sem autorização explícita.
+- Fluxo assíncrono (job + progresso ao vivo): testado via HTTP real (`curl`, servidor de
+  dev já rodando) com um arquivo vazio, que falha em `validar_estrutura!` antes de qualquer
+  `.create!` — confirma que `create` enfileira o job e redireciona, que o job roda e grava o
+  estado em `Rails.cache`, e que `show` renderiza o log completo e o alerta de falha
+  corretamente. `Titulo.count` conferido antes/depois (sem mudança) para garantir que nada
+  foi gravado. `ActionCable` confirmado montado em `/cable` (handshake WS manual com `curl`).
+  O caminho de sucesso (arquivo válido, títulos realmente gravados) não foi exercitado via
+  HTTP pelo mesmo motivo do teste original — evitar gravar dados reais no banco de
+  desenvolvimento, que é o banco de produção legado.

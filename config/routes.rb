@@ -30,7 +30,7 @@ Rails.application.routes.draw do
       delete :purge
     end
   end
-  resources :remessa_imports, only: %i[new create] do
+  resources :remessa_imports, only: %i[new create show] do
     collection do
       get :cancel
       delete :cancel

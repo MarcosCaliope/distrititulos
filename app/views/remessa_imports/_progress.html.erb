@@ -1,0 +1,25 @@
+<div id="remessa_import_progress">
+  <% if state[:status] == "running" %>
+    <div class="alert alert-info">
+      Processando "<%= state[:filename] %>"...
+      <% if state[:total].to_i.positive? %>
+        <%= state[:processed] %> / <%= state[:total] %> linhas
+      <% end %>
+    </div>
+    <% percent = state[:total].to_i.positive? ? (100.0 * state[:processed] / state[:total]).round : 0 %>
+    <div class="progress mb-3" style="height: 1.5rem;">
+      <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: <%= percent %>%;" aria-valuenow="<%= percent %>" aria-valuemin="0" aria-valuemax="100">
+        <%= percent %>%
+      </div>
+    </div>
+  <% elsif state[:status] == "success" %>
+    <div class="alert alert-success">
+      Importação concluída com sucesso. <strong><%= state[:titulos_count] %></strong> título(s) importado(s),
+      <strong><%= state[:titulos_rejeitados_count] %></strong> rejeitado(s) (marcado(s) irregular).
+    </div>
+  <% else %>
+    <div class="alert alert-danger">
+      Importação falhou. Nenhum dado foi gravado. Veja o log abaixo.
+    </div>
+  <% end %>
+</div>
