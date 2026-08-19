@@ -53,6 +53,8 @@ detalhes de configuração deste ambiente específico.
   é gravado em cada tabela.
 - `docs/manutencao_dados.md` — operações de manutenção de dados executadas diretamente no
   banco (fora do controle de versão).
+- `docs/devedores_solidarios_no_titulo.md` — gestão de devedores solidários a partir da
+  página do título e o rótulo "Dev.Sol." na listagem de títulos.
 
 ## Notas de performance
 
