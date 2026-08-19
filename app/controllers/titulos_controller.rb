@@ -35,9 +35,12 @@ class TitulosController < ApplicationController
       @titulos = Titulo.none
       flash.now[:alert] = "A busca demorou demais e foi cancelada. Combine o nome do devedor com CPF/CNPJ, protocolo ou uma data para refinar."
     end
+
+    @protocolos_com_devedor_solidario = protocolos_com_devedor_solidario(@titulos.map(&:protocolo))
   end
 
   def show
+    @devedor_solidarios = DevedorSolidario.where(protocolo: @titulo.protocolo)
   end
 
   def new
@@ -70,6 +73,22 @@ class TitulosController < ApplicationController
   end
 
   private
+
+  # tbldevedorsolidario's only index has protocolo as its third column, so a
+  # WHERE protocolo IN (...) here forces a sequential scan of the whole table
+  # (~115k rows, ~1s). That's just for a "Dev.Sol." badge on the index, so it
+  # isn't worth failing the whole page over — give it a short timeout and
+  # fall back to showing no badges instead.
+  def protocolos_com_devedor_solidario(protocolos)
+    return Set.new if protocolos.empty?
+
+    ActiveRecord::Base.transaction do
+      ActiveRecord::Base.connection.execute("SET LOCAL statement_timeout = '2s'")
+      DevedorSolidario.where(protocolo: protocolos).distinct.pluck(:protocolo).to_set
+    end
+  rescue ActiveRecord::QueryCanceled
+    Set.new
+  end
 
   def set_titulo
     @titulo = Titulo.find(params[:id])

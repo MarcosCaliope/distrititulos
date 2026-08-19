@@ -12,7 +12,7 @@ class DevedorSolidariosController < ApplicationController
   end
 
   def new
-    @devedor_solidario = DevedorSolidario.new
+    @devedor_solidario = DevedorSolidario.new(protocolo: params[:protocolo], snumtitulo: params[:snumtitulo])
   end
 
   def create

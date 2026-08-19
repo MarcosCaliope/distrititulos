@@ -49,7 +49,12 @@
     <tbody>
       <% @titulos.each do |titulo| %>
         <tr>
-          <td><%= link_to titulo.protocolo, titulo %></td>
+          <td>
+            <%= link_to titulo.protocolo, titulo %>
+            <% if @protocolos_com_devedor_solidario.include?(titulo.protocolo) %>
+              <span class="badge text-bg-info">Dev.Sol.</span>
+            <% end %>
+          </td>
           <td><%= titulo.num_tit %></td>
           <td><%= titulo.cpf_cgc %></td>
           <td><%= titulo.devedor %></td>
