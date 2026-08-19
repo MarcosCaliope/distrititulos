@@ -287,14 +287,6 @@ class RemessaImporter
       isql: sequencial
     )
 
-    if criticas[:tipo_tit] == "*" && protocolo.present?
-      Titulo.where(protocolo: protocolo).update_all(
-        tipo_tit: criticas[:tipo_tit],
-        stipoocorrencia: criticas[:stipoocorrencia],
-        icodirregularidade: criticas[:icodirreg]
-      )
-    end
-
     criticas
   end
 
@@ -339,8 +331,17 @@ class RemessaImporter
 
   # --- Críticas por título (não abortam, só marcam irregular) --------------
 
+  # Críticas só se aplicam ao registro titular (posição 297 = "1"); registros de devedor
+  # solidário (principal: false) só precisam da espécie, sem passar por nenhuma validação.
   def avaliar_criticas(linha, tipo_doc_devedor, doc_devedor, principal:)
-    tipo_tit = ""
+    especie_codigo = campo(linha, 214, 3).strip
+    tipo_tit_registro = TipoTit.find_by(abrevia: especie_codigo) || criar_tipo_tit(especie_codigo)
+    tipo_tit = tipo_tit_registro.codigo
+
+    unless principal
+      return { tipo_tit: tipo_tit, icodirreg: 0, stipoocorrencia: "", dt_emissao: nil, dt_vencto: nil }
+    end
+
     icodirreg = 0
     stipoocorrencia = ""
 
@@ -350,10 +351,6 @@ class RemessaImporter
       stipoocorrencia = "5"
       grava_log("Atenção !!! #{mensagem}")
     end
-
-    especie_codigo = campo(linha, 214, 3).strip
-    tipo_tit_registro = TipoTit.find_by(abrevia: especie_codigo) || criar_tipo_tit(especie_codigo)
-    tipo_tit = tipo_tit_registro.codigo
 
     unless documento_valido?(tipo_doc_devedor, doc_devedor)
       if doc_devedor == "00000000000000"
@@ -409,20 +406,18 @@ class RemessaImporter
       marcar.call(7, "documento do Devedor é igual ao documento do Credor. Titulo Marcado como Irregular")
     end
 
-    if principal
-      praca = campo(linha, 275, 20).strip.upcase
-      cidade_devedor = campo(linha, 424, 20).strip.upcase
-      apresentante_isento = @apresentante.codigo == APRESENTANTE_SEM_REGRA_PRACA
+    praca = campo(linha, 275, 20).strip.upcase
+    cidade_devedor = campo(linha, 424, 20).strip.upcase
+    apresentante_isento = @apresentante.codigo == APRESENTANTE_SEM_REGRA_PRACA
 
-      if praca != CIDADE_EMPRESA && !apresentante_isento
-        marcar.call(15, "Praça de Pagamento diferente")
-      end
-      if cidade_devedor != CIDADE_EMPRESA && !apresentante_isento
-        marcar.call(15, "Cidade do Devedor diferente")
-      end
-      if tipo_doc_devedor == "CPF" && campo(linha, 566, 1) == "F"
-        marcar.call(50, "CPF não pode ser Protestado para fins Falimentares. Titulo Marcado como Irregular")
-      end
+    if praca != CIDADE_EMPRESA && !apresentante_isento
+      marcar.call(15, "Praça de Pagamento diferente")
+    end
+    if cidade_devedor != CIDADE_EMPRESA && !apresentante_isento
+      marcar.call(15, "Cidade do Devedor diferente")
+    end
+    if tipo_doc_devedor == "CPF" && campo(linha, 566, 1) == "F"
+      marcar.call(50, "CPF não pode ser Protestado para fins Falimentares. Titulo Marcado como Irregular")
     end
 
     { tipo_tit: tipo_tit, icodirreg: icodirreg, stipoocorrencia: stipoocorrencia, dt_emissao: dt_emissao, dt_vencto: dt_vencto }

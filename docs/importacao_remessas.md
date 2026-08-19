@@ -38,9 +38,7 @@ para: (1) regravar o estado no cache, (2) `broadcast_replace_to` a barra de prog
 
 Ao final, `RemessaImporter#call` também calcula `titulos_rejeitados_count` (títulos gravados
 com `tipo_tit = "*"`, ou seja, marcados irregulares por alguma crítica) contando direto na
-tabela após o commit — não dá pra somar isso durante o loop porque uma linha de devedor
-solidário pode marcar como irregular um título que já tinha sido gravado como OK antes (ver
-"O que é gravado" abaixo). O resumo final mostra título(s) importado(s) vs rejeitado(s).
+tabela após o commit. O resumo final mostra título(s) importado(s) vs rejeitado(s).
 
 ## Layout do arquivo
 
@@ -114,9 +112,9 @@ ambos.
 - **Linha titular**: garante o devedor em `cad_devedor` (cria se não existir, atualiza
   `sbairro` se já existir), gera `protocolo` novo via `nextval('seq_protocolo')` e insere em
   `cad_titulos`.
-- **Linha solidária**: reaproveita o `protocolo` da última linha titular do mesmo arquivo,
-  insere em `tbldevedorsolidario`; se ficar irregular, também marca o título principal
-  (mesmo protocolo) como irregular.
+- **Linha solidária**: reaproveita o `protocolo` da última linha titular do mesmo arquivo e
+  insere em `tbldevedorsolidario`. Não passa por nenhuma crítica (só a linha titular, posição
+  297 = `"1"`, é validada) e por isso nunca marca o título principal como irregular.
 - **Toda linha** (header, título, trailer): grava uma cópia em `tblremessas`.
 
 ## Diferença deliberada em relação ao original

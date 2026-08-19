@@ -76,7 +76,9 @@ normalmente, com `icodirregularidade = 0`.
 
 ## Validações por título
 
-Checadas em `avaliar_criticas` para cada linha de título (titular ou solidária). O código
+Checadas em `avaliar_criticas` só para a linha titular (posição 297 = `"1"`) — linhas de
+devedor solidário (posição 297 ≠ `"1"`) não passam por nenhuma crítica, só resolvem a espécie
+(seção acima) para gravar em `tbldevedorsolidario`/`tblremessas`. O código
 entre parênteses é o `icodirregularidade` gravado; a descrição oficial de cada código vive na
 tabela `irregularidades`. **Se mais de uma regra falhar no mesmo título, só o código da
 última que falhou é gravado** (mesmo comportamento do VB original) — mas todas geram uma
