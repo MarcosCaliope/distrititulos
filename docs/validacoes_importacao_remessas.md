@@ -87,7 +87,7 @@ linha no log de importação.
 | 7 | CPF/CNPJ do devedor (posição 346–359) inválido pelo dígito verificador padrão — exceto quando o documento é exatamente `00000000000000`, caso em que o código gravado é 50 em vez de 7. Documentos do tipo `CI` (nem CPF nem CGC) nunca falham essa checagem, independente do conteúdo — igual ao original, que só valida dígito verificador de CPF/CNPJ. |
 | 10 | CPF/CNPJ do sacador (posição 110–123) inválido. |
 | 16 | Número do título (posição 217–227) vazio. |
-| 6 | Endereço do devedor (posição 371–415) vazio, ou com menos de 5 posições (no campo bruto, sem remover espaços — na prática só pega linha truncada, já que o campo de largura fixa normalmente vem preenchido com espaços até 45 posições), ou sem "SN"/"S/N"/"S?N" em nenhum lugar da string (não importa se há dígito). |
+| 6 | Endereço do devedor (posição 371–415) vazio, ou com menos de 5 posições (no campo bruto, sem remover espaços — na prática só pega linha truncada, já que o campo de largura fixa normalmente vem preenchido com espaços até 45 posições), ou sem nenhum dígito e sem "SN"/"S/N"/"S?N" em nenhum lugar da string (válido se tiver um dígito OU o marcador "sem número"). |
 | 50 | Data de emissão (posição 228–235, `DDMMAAAA`) inválida ou anterior a 1900-01-01 — nesse caso a data é forçada para 1900-01-01. |
 | 50 | Data de vencimento (posição 236–243) inválida (não é `DDMMAAAA` parseável nem um dos códigos especiais `99999999`/`99990001`/`99990030`) — nesse caso a data é forçada para a data de emissão. |
 | 1 | Data de vencimento no futuro (maior que hoje) ou anterior à data de emissão. |

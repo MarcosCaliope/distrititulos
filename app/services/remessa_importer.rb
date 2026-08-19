@@ -368,7 +368,7 @@ class RemessaImporter
       marcar.call(6, "Endereço do Devedor Insuficiente")
     elsif endereco_devedor.length < 5
       marcar.call(6, "Endereço do Devedor Menor que 5 posições")
-    elsif !endereco_devedor.upcase.match?(%r{S/?\??N})
+    elsif !endereco_devedor.match?(/\d/) && !endereco_devedor.upcase.match?(%r{S/?\??N})
       marcar.call(6, "Endereço do Devedor não contem número")
     end
 
