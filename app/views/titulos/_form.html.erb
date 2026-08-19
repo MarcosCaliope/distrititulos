@@ -29,7 +29,12 @@
 
   <div class="mb-3">
     <%= f.label :tipo_tit, "Tipo de título", class: "form-label" %>
-    <%= f.text_field :tipo_tit, maxlength: 2, class: "form-control" %>
+    <div class="d-flex align-items-center gap-2">
+      <%= f.text_field :tipo_tit, maxlength: 2, class: "form-control", style: "max-width: 8rem;" %>
+      <% if titulo.tipo_tit.present? %>
+        <span class="text-muted"><%= TipoTit.find_by(codigo: titulo.tipo_tit)&.descricao || "código não cadastrado" %></span>
+      <% end %>
+    </div>
   </div>
 
   <div class="mb-3">

@@ -12,7 +12,12 @@
     <li class="list-group-item"><strong>Protocolo:</strong> <%= @titulo.protocolo %></li>
     <li class="list-group-item"><strong>Tipo de documento:</strong> <%= @titulo.tipo_doc %></li>
     <li class="list-group-item"><strong>CPF/CNPJ:</strong> <%= @titulo.cpf_cgc %></li>
-    <li class="list-group-item"><strong>Tipo de título:</strong> <%= @titulo.tipo_tit %></li>
+    <li class="list-group-item">
+      <strong>Tipo de título:</strong> <%= @titulo.tipo_tit %>
+      <% if @titulo.tipo_tit.present? %>
+        <span class="text-muted">— <%= TipoTit.find_by(codigo: @titulo.tipo_tit)&.descricao || "código não cadastrado" %></span>
+      <% end %>
+    </li>
     <li class="list-group-item"><strong>Número do título:</strong> <%= @titulo.num_tit %></li>
     <li class="list-group-item"><strong>Devedor:</strong> <%= @titulo.devedor %></li>
     <li class="list-group-item"><strong>Cedente:</strong> <%= @titulo.cedente %></li>
