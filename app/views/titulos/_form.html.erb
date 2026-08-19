@@ -32,7 +32,8 @@
     <div class="d-flex align-items-center gap-2">
       <%= f.text_field :tipo_tit, maxlength: 2, class: "form-control", style: "max-width: 8rem;" %>
       <% if titulo.tipo_tit.present? %>
-        <span class="text-muted"><%= TipoTit.find_by(codigo: titulo.tipo_tit)&.descricao || "código não cadastrado" %></span>
+        <% tipo_tit_registro = TipoTit.find_by(codigo: titulo.tipo_tit) %>
+        <span class="text-muted"><%= tipo_tit_registro ? "#{tipo_tit_registro.abrevia} — #{tipo_tit_registro.descricao}" : "código não cadastrado" %></span>
       <% end %>
     </div>
   </div>
