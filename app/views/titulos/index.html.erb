@@ -41,6 +41,8 @@
         <th>Data recebimento</th>
         <th>Data distribuição</th>
         <th>Status</th>
+        <th>Tipo de título</th>
+        <th>Irregularidade</th>
         <th class="text-end">Ações</th>
       </tr>
     </thead>
@@ -55,6 +57,8 @@
           <td><%= titulo.dat_rece %></td>
           <td><%= titulo.dat_dist %></td>
           <td><%= titulo.status %></td>
+          <td><%= titulo.tipo_tit %></td>
+          <td><%= titulo.icodirregularidade %></td>
           <td class="text-end">
             <%= link_to "Editar", edit_titulo_path(titulo), class: "btn btn-sm btn-outline-secondary" %>
             <%= link_to "Remover", titulo, data: { turbo_method: :delete, turbo_confirm: "Remover o título #{titulo.protocolo}?" }, class: "btn btn-sm btn-outline-danger" %>
