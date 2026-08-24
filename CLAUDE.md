@@ -91,6 +91,14 @@ placeholders), so there's no existing test to pattern-match against yet.
   `app/views/layouts/application.html.erb`, not through the asset pipeline/importmap).
 - Controllers follow a consistent CRUD shape (`index`/`show`/`new`/`create`/`edit`/`update`/
   `destroy`), one per cadastro/processo table.
+- No I18n framework is used — labels/messages are hardcoded Portuguese strings directly in the
+  views/controllers, not translation keys. **Dates/datetimes displayed as read-only text**
+  (index/show pages, alerts) go through `formatar_data`/`formatar_data_hora`
+  (`app/helpers/application_helper.rb`) to render `dd/mm/aaaa`, since Ruby's default
+  `Date`/`Time#to_s` is ISO. Don't apply this to `date_field`/`date_field_tag` values (HTML5
+  requires ISO) or to anything feeding routing/`to_param` — `Feriado` uses `dtferiado` (a
+  `Date`) as its primary key, so its ISO string is still what appears in URLs even though the
+  link text is formatted.
 - **Search pattern depends on table size**, because the Postgres collation in use prevents
   index usage on `LIKE`/`ILIKE`, even prefix-only:
   - Small cadastro tables (`apresentantes`, `bancos`, `devedores`, ...): `index` does an
