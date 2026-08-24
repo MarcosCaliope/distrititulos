@@ -32,10 +32,10 @@
   <div class="card-header">Datas e valor</div>
   <ul class="list-group list-group-flush">
     <li class="list-group-item"><strong>Valor:</strong> <%= number_to_currency(@titulo.valor, unit: "R$") %></li>
-    <li class="list-group-item"><strong>Data de vencimento:</strong> <%= @titulo.dat_venc %></li>
-    <li class="list-group-item"><strong>Data de recebimento:</strong> <%= @titulo.dat_rece %></li>
-    <li class="list-group-item"><strong>Data de distribuição:</strong> <%= @titulo.dat_dist %></li>
-    <li class="list-group-item"><strong>Data de emissão:</strong> <%= @titulo.dat_emissao %></li>
+    <li class="list-group-item"><strong>Data de vencimento:</strong> <%= formatar_data(@titulo.dat_venc) %></li>
+    <li class="list-group-item"><strong>Data de recebimento:</strong> <%= formatar_data(@titulo.dat_rece) %></li>
+    <li class="list-group-item"><strong>Data de distribuição:</strong> <%= formatar_data(@titulo.dat_dist) %></li>
+    <li class="list-group-item"><strong>Data de emissão:</strong> <%= formatar_data(@titulo.dat_emissao) %></li>
   </ul>
 </div>
 

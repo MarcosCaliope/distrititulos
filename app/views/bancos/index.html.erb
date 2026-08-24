@@ -29,7 +29,7 @@
           <td><%= banco.codigo %></td>
           <td><%= link_to banco.banco, banco %></td>
           <td><%= banco.email %></td>
-          <td><%= banco.data %></td>
+          <td><%= formatar_data_hora(banco.data) %></td>
           <td class="text-end">
             <%= link_to "Editar", edit_banco_path(banco), class: "btn btn-sm btn-outline-secondary" %>
             <%= link_to "Remover", banco, data: { turbo_method: :delete, turbo_confirm: "Remover #{banco.banco}?" }, class: "btn btn-sm btn-outline-danger" %>

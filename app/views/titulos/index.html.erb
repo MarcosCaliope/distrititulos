@@ -59,8 +59,8 @@
           <td><%= titulo.cpf_cgc %></td>
           <td><%= titulo.devedor %></td>
           <td><%= number_to_currency(titulo.valor, unit: "R$") %></td>
-          <td><%= titulo.dat_rece %></td>
-          <td><%= titulo.dat_dist %></td>
+          <td><%= formatar_data(titulo.dat_rece) %></td>
+          <td><%= formatar_data(titulo.dat_dist) %></td>
           <td><%= titulo.status %></td>
           <td><%= titulo.tipo_tit %></td>
           <td><%= titulo.icodirregularidade %></td>

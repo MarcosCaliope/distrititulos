@@ -23,18 +23,19 @@ class DistribuicoesController < ApplicationController
   # Mostra quantos títulos seriam afetados por desfazer a distribuição de uma data, antes de confirmar.
   def desfazer
     @dat_distribuicao = params[:dat_distribuicao].presence
+    @dat_distribuicao_formatada = Date.parse(@dat_distribuicao).strftime("%d/%m/%Y") if @dat_distribuicao
     @titulos_count = Titulo.where(dat_dist: @dat_distribuicao).count if @dat_distribuicao
 
     return unless request.delete?
 
-    if @dat_distribuicao.blank? || params[:confirm_data] != @dat_distribuicao
+    if @dat_distribuicao.blank? || params[:confirm_data] != @dat_distribuicao_formatada
       flash.now[:alert] = "Digite a mesma data para confirmar."
       render :desfazer, status: :unprocessable_entity
       return
     end
 
     result = DesfazerDistribuicao.new(dat_distribuicao: @dat_distribuicao).call
-    redirect_to new_distribuicao_path, notice: "Distribuição de #{@dat_distribuicao} desfeita. #{result.titulos_count} título(s) revertido(s)."
+    redirect_to new_distribuicao_path, notice: "Distribuição de #{@dat_distribuicao_formatada} desfeita. #{result.titulos_count} título(s) revertido(s)."
   end
 
   private

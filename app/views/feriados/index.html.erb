@@ -27,7 +27,7 @@
     <tbody>
       <% @feriados.each do |feriado| %>
         <tr>
-          <td><%= link_to feriado.dtferiado, feriado %></td>
+          <td><%= link_to formatar_data(feriado.dtferiado), feriado %></td>
           <td><%= feriado.sdescricao %></td>
           <td class="text-end">
             <%= link_to "Editar", edit_feriado_path(feriado), class: "btn btn-sm btn-outline-secondary" %>

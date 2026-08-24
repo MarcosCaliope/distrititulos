@@ -11,7 +11,7 @@
     <li class="list-group-item"><strong>Código apresentante:</strong> <%= @remessa.codapr %></li>
     <li class="list-group-item"><strong>Arquivo texto:</strong> <%= @remessa.snomearquivotexto %></li>
     <li class="list-group-item"><strong>ISQL:</strong> <%= @remessa.isql %></li>
-    <li class="list-group-item"><strong>Data remessa:</strong> <%= @remessa.datarem %></li>
+    <li class="list-group-item"><strong>Data remessa:</strong> <%= formatar_data(@remessa.datarem) %></li>
     <li class="list-group-item"><strong>Situação:</strong> <%= @remessa.situacao %></li>
     <li class="list-group-item"><strong>Código irregularidade:</strong> <%= @remessa.icodirreg %></li>
     <li class="list-group-item"><strong>Tipo título:</strong> <%= @remessa.tipo_tit %></li>

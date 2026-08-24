@@ -9,7 +9,7 @@
 <div class="card">
   <ul class="list-group list-group-flush">
     <li class="list-group-item"><strong>Código:</strong> <%= @banco.codigo %></li>
-    <li class="list-group-item"><strong>Data:</strong> <%= @banco.data %></li>
+    <li class="list-group-item"><strong>Data:</strong> <%= formatar_data_hora(@banco.data) %></li>
     <li class="list-group-item"><strong>Seq:</strong> <%= @banco.seq %></li>
     <li class="list-group-item"><strong>CD2:</strong> <%= @banco.cd2 %></li>
     <li class="list-group-item"><strong>Sq título:</strong> <%= @banco.sq_titulo %></li>
