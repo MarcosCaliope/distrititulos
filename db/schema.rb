@@ -113,6 +113,11 @@ ActiveRecord::Schema[8.0].define(version: 0) do
     t.boolean "binseretitulorejeitado"
     t.string "scodmunicipio", limit: 7
     t.boolean "bselodigital"
+    t.string "spathdeposito", limit: 150
+    t.string "spathdepositodistribuidor", limit: 150
+    t.string "spathprocessados", limit: 150
+    t.string "spathconfirmados", limit: 150
+    t.integer "iquantidadetitporremessa"
   end
 
   create_table "cad_especies", primary_key: "codigo", id: { type: :string, limit: 3 }, force: :cascade do |t|

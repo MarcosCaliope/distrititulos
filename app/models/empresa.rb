@@ -22,4 +22,8 @@ class Empresa < ApplicationRecord
   validates :spatharquivos, length: { maximum: 100 }
   validates :snolivro, length: { maximum: 5 }
   validates :scodmunicipio, length: { maximum: 7 }
+  validates :spathdeposito, length: { maximum: 150 }
+  validates :spathdepositodistribuidor, length: { maximum: 150 }
+  validates :spathprocessados, length: { maximum: 150 }
+  validates :spathconfirmados, length: { maximum: 150 }
 end
