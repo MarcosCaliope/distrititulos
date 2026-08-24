@@ -103,11 +103,18 @@ placeholders), so there's no existing test to pattern-match against yet.
     `SET LOCAL statement_timeout` inside a transaction to turn a runaway query into a friendly
     error instead of a hang. **Before adding a new filter to a large table**, check
     `EXPLAIN ANALYZE` rather than assuming it'll be fast — see the comments in
-    `titulos_controller.rb`/`remessas_controller.rb` for the full reasoning.
+    `titulos_controller.rb`/`remessas_controller.rb` for the full reasoning. The same
+    degrade-gracefully-on-timeout idea shows up again in
+    `TitulosController#protocolos_com_devedor_solidario` (the "Dev.Sol." label on the títulos
+    listing): a `WHERE protocolo IN (...)` against `tbldevedorsolidario` can't use its only
+    index selectively, so that lookup runs with its own `SET LOCAL statement_timeout` in a
+    separate transaction and just omits the label if it times out — see
+    `docs/devedores_solidarios_no_titulo.md`.
 - **Bulk destructive operations require typed confirmation**: `RemessasController#purge`
-  (delete all remessas from a year and earlier) and `RemessaImportsController#cancel` (undo an
-  entire remessa import) both do a `GET` that previews the affected row count, then only
-  execute on `DELETE` if the user retypes the year/filename as confirmation. Follow this
+  (delete all remessas from a year and earlier), `RemessaImportsController#cancel` (undo an
+  entire remessa import), and `DistribuicoesController#desfazer` (undo a day's distribuição,
+  via `DesfazerDistribuicao`) all do a `GET` that previews the affected row count, then only
+  execute on `DELETE` if the user retypes the year/filename/date as confirmation. Follow this
   two-step pattern for any other bulk/irreversible delete.
 - **Remessa import** (`app/services/remessa_importer.rb`) is a plain service object (not a
   model) that ports `frmImpTitulos.frm` from the legacy VB6 system: parses a 600-column
