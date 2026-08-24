@@ -52,7 +52,8 @@ class EmpresasController < ApplicationController
       :sfone, :semail, :sweb, :snomeresponsavel, :scpfresponsavel, :snomesubstituto,
       :spathlogo, :inooficio, :stitulo, :spatharquivos, :imodeloctd, :snolivro, :ifolha,
       :iqtdefolhas, :iqtdetitulosporfolha, :binseretitulorejeitado, :scodmunicipio,
-      :bselodigital
+      :bselodigital, :spathdeposito, :spathdepositodistribuidor, :spathprocessados,
+      :spathconfirmados, :iquantidadetitporremessa
     )
   end
 end

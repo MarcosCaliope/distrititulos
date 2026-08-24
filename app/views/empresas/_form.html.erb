@@ -111,6 +111,31 @@
   </div>
 
   <div class="mb-3">
+    <%= f.label :spathdeposito, "Caminho do depósito", class: "form-label" %>
+    <%= f.text_field :spathdeposito, maxlength: 150, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :spathdepositodistribuidor, "Caminho do depósito do distribuidor", class: "form-label" %>
+    <%= f.text_field :spathdepositodistribuidor, maxlength: 150, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :spathprocessados, "Caminho dos processados", class: "form-label" %>
+    <%= f.text_field :spathprocessados, maxlength: 150, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :spathconfirmados, "Caminho dos confirmados", class: "form-label" %>
+    <%= f.text_field :spathconfirmados, maxlength: 150, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :iquantidadetitporremessa, "Quantidade de títulos por remessa", class: "form-label" %>
+    <%= f.number_field :iquantidadetitporremessa, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
     <%= f.label :imodeloctd, "Modelo CTD", class: "form-label" %>
     <%= f.number_field :imodeloctd, class: "form-control" %>
   </div>
