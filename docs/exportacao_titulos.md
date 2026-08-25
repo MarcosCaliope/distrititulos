@@ -96,13 +96,18 @@ nenhuma linha original pra reler.
 
 ## Nome do arquivo e cabeçalho/trailer
 
-Mesma convenção do legado: `"D" + reg(3) + ddmm(4) + ext`, onde `reg` é o código do portador
-(posição 2-4 da linha original de `tblremessas.sregistro` casada só por `snomearquivotexto`,
-sem filtrar apresentante — mesma imprecisão do legado) e `ext` é a extensão original do arquivo
-de importação com o `pro_id` do cartório inserido no meio (ex: original `.231` + cartório `7`
-vira `.2371`). No modo avulso, `reg = "000"` e a extensão usa o ano com 2 dígitos + `pro_id` +
-`"1"`. Arquivos além do primeiro de uma mesma divisão por quantidade ganham um sufixo numérico
-incremental no nome (`2`, `3`, ...).
+Mesma convenção do legado: `"D" + no_portador(3) + ddmm(4) + ext`, onde `no_portador` é o
+`cad_apresenta.scodcompensacao` do apresentante (`cod_apr`), formatado em 3 posições — zero à
+esquerda se for só dígitos (`campo_numerico`), senão alinhado à esquerda (`campo_string`).
+Conferido contra um arquivo real gerado pelo sistema legado (`D0Y52508.2622`, apresentante com
+`scodcompensacao = "0Y5"`): o código do portador é usado como está, sem reformatação — não é
+relido de `tblremessas.sregistro` (posição 2-4 do header/detalhe/trailer originais), como uma
+versão anterior deste port fazia. Esse mesmo `no_portador` é reaproveitado tanto no nome do
+arquivo quanto nas três linhas (header, detalhe, trailer). `ext` é a extensão original do
+arquivo de importação com o `pro_id` do cartório inserido no meio (ex: original `.231` +
+cartório `7` vira `.2371`). No modo avulso, `no_portador = "000"` e a extensão usa o ano com 2
+dígitos + `pro_id` + `"1"`. Arquivos além do primeiro de uma mesma divisão por quantidade ganham
+um sufixo numérico incremental no nome (`2`, `3`, ...).
 
 O header tem um trecho sempre hardcoded — `VERSAO_LAYOUT ("043") + MUNICIPIO_FORCADO
 ("2304400")`. `"043"` não é um código de portador: é o campo oficial "Versão do Layout" do
@@ -171,10 +176,16 @@ descomentar o bloco.
   da correção da transliteração de acentos (sem ela, um nome com "SÃO LUIZ" gerava uma linha de
   601 bytes, já que "Ã" ocupa 2 bytes em UTF-8 embora conte como 1 caractere).
   `TblArquivo.count` conferido antes/durante/depois do rollback (sem mudança).
-- Testado de fato via HTTP (`create`), com `cad_empresa.spathdeposito` temporariamente apontado
-  para `/mnt/d/Fontes_SIAC_Andre/Projetos Smart/Distribuidor/dados/` — o caminho real do sistema
+- Testado de fato via HTTP (`create`), com `cad_empresa.spathdeposito` apontado para
+  `/mnt/d/Fontes_SIAC_Andre/Projetos Smart/Distribuidor/dados/` — o caminho real do sistema
   legado, acessível a partir daqui via o mapeamento automático do WSL para o drive `D:` do
   Windows (mesma máquina). 5 arquivos gerados de verdade nessa pasta (modo avulso, data com
-  poucos títulos), `tblarquivos` conferido, e o campo revertido ao valor original depois
-  (`D:\Fontes_SIAC_Andre\Projetos Smart\Distribuidor\dados\`) — essa mudança de dado não ficou
-  permanente. Não foi testado o envio de e-mail de fato (exigiria credenciais SMTP reais).
+  poucos títulos), `tblarquivos` conferido. Esse valor ficou assim deliberadamente (não é mais
+  o caminho Windows original) pra viabilizar teste real neste ambiente. Não foi testado o envio
+  de e-mail de fato (exigiria credenciais SMTP reais).
+- Comparado byte a byte contra um arquivo real gerado pelo sistema legado
+  (`D0Y52508.2622`, fornecido pelo usuário: 1 título com 8 devedores solidários pro cartório 2,
+  apresentante com `scodcompensacao = "0Y5"`) — confirmou o formato geral (600 bytes/linha,
+  header/detalhe/trailer) e revelou que o código do portador deve vir de
+  `cad_apresenta.scodcompensacao`, não relido de `tblremessas.sregistro` (ver seção "Nome do
+  arquivo e cabeçalho/trailer").

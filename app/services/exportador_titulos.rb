@@ -143,7 +143,7 @@ class ExportadorTitulos
       @sequencial = 1
       contagens = calcular_contagens(chunk)
       no_portador, nome_portador, no_remessa, agencia_centralizadora = dados_portador(cod_apr, chunk.last)
-      nome_arquivo = nome_arquivo(chunk: chunk, protesto: protesto, indice: indice)
+      nome_arquivo = nome_arquivo(chunk: chunk, protesto: protesto, indice: indice, no_portador: no_portador)
 
       linhas = [ linha_header(no_portador: no_portador, nome_portador: nome_portador, no_remessa: no_remessa,
                                agencia_centralizadora: agencia_centralizadora, contagens: contagens) ]
@@ -193,25 +193,23 @@ class ExportadorTitulos
     end
 
     remessa = Remessa.where(codapr: cod_apr, snomearquivotexto: ultimo_titulo.snomearquivotexto).order(:isql).first
-    return [ "000", campo_string("", 40), "000000", "000000" ] unless remessa
+    no_portador = numerico?(cod_apr) ? campo_numerico(cod_apr, 3) : campo_string(cod_apr, 3)
+    return [ no_portador, campo_string("", 40), "000000", "000000" ] unless remessa
 
     reg = remessa.sregistro.to_s
-    [ campo(reg, 2, 3), campo(reg, 5, 40), campo(reg, 62, 6), campo(reg, 84, 6) ]
+    [ no_portador, campo(reg, 5, 40), campo(reg, 62, 6), campo(reg, 84, 6) ]
   end
 
-  def nome_arquivo(chunk:, protesto:, indice:)
+  def nome_arquivo(chunk:, protesto:, indice:, no_portador:)
     if modo_avulso?
       ext = ".#{@dat_distribuicao.strftime('%y')}#{protesto.pro_id}1"
-      reg = "000"
     else
       ultimo = chunk.last
       sufixo = ultimo.snomearquivotexto.to_s.strip[-4, 4].to_s.rjust(4, "0")
       ext = "#{sufixo[0, 3]}#{protesto.pro_id}#{sufixo[3, 1]}"
-      remessa = Remessa.where(snomearquivotexto: ultimo.snomearquivotexto).order(:isql).first
-      reg = remessa ? campo(remessa.sregistro, 2, 3) : "000"
     end
 
-    base = "D#{reg}#{@dat_distribuicao.strftime('%d%m')}#{ext}"
+    base = "D#{no_portador}#{@dat_distribuicao.strftime('%d%m')}#{ext}"
     indice.positive? ? "#{base}#{indice}" : base
   end
 
