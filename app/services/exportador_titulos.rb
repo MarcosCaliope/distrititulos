@@ -5,8 +5,13 @@
 # (posição 1): "0" header, "1" título (+ um por devedor solidário), "9" trailer.
 #
 # Mudanças deliberadas em relação ao legado (ver docs/exportacao_titulos.md para detalhes):
-# - apresentante/pasta de depósito localizados por cad_apresenta.scodcompensacao (não mais
-#   cad_bancos.cd2), mesma mudança já feita na importação (RemessaImporter).
+# - apresentante/pasta de depósito localizados via cad_apresenta (não mais cad_bancos.cd2),
+#   mesma mudança já feita na importação (RemessaImporter) — mas cad_titulos.cod_apr guarda ou
+#   cad_apresenta.codigo ou cad_apresenta.scodcompensacao dependendo de
+#   cad_empresa.scodmunicipio (mesma regra de RemessaImporter#call, replicada aqui em
+#   #resolver_apresentante), então a busca do apresentante por cod_apr precisa checar o campo
+#   certo. Já o código do portador escrito no arquivo (header/detalhe/trailer/nome do arquivo)
+#   é sempre cad_apresenta.scodcompensacao, independente de qual campo o cod_apr representa.
 # - tipo_tit excluído é configurável (cad_empresa.stipotitpadraodev, cai em "*" se vazio) em
 #   vez do "*" hardcoded do legado — exceto na decisão de imprimir irregularidade em
 #   GeraDetalhe/GeraSolidario, que no legado sempre comparava com o literal "*" (preservado).
@@ -37,6 +42,9 @@ class ExportadorTitulos
   # Campo "Versão do Layout" do padrão Febraban (posição 90-92 do header) — constante da
   # própria especificação ("043Febraban.pdf", Layout Único v4.3), não um código de portador.
   VERSAO_LAYOUT = "043"
+  # Mesma constante/regra de RemessaImporter: define se cad_titulos.cod_apr guarda
+  # cad_apresenta.codigo (quando a empresa é o próprio município) ou scodcompensacao.
+  CODMUNICIPIO_EMPRESA_COD_APR_PROPRIO = "2304400"
 
   def initialize(dat_distribuicao:, modo:, codigo_apresentante: nil)
     @dat_distribuicao = parse_data(dat_distribuicao)
@@ -53,7 +61,7 @@ class ExportadorTitulos
 
     ActiveRecord::Base.transaction do
       codigos_apresentante.each do |cod_apr|
-        apresentante = Apresentante.find_by(scodcompensacao: cod_apr)
+        apresentante = resolver_apresentante(cod_apr)
         pasta = pasta_deposito(apresentante)
         next if pasta.blank?
 
@@ -61,7 +69,7 @@ class ExportadorTitulos
           titulos = titulos_para(cod_apr, protesto).order(:isql).to_a
           next if titulos.empty?
 
-          gerar_arquivos(cod_apr: cod_apr, protesto: protesto, titulos: titulos, pasta: pasta)
+          gerar_arquivos(cod_apr: cod_apr, apresentante: apresentante, protesto: protesto, titulos: titulos, pasta: pasta)
         end
       end
     end
@@ -84,8 +92,8 @@ class ExportadorTitulos
   def validar
     return [ "Data de distribuição inválida." ] if @dat_distribuicao.nil?
     return [ "Modo inválido." ] unless MODOS.include?(@modo)
-    return [ "Informe o código de compensação do apresentante." ] if @modo == "apresentante" && @codigo_apresentante.blank?
-    if @modo == "apresentante" && Apresentante.find_by(scodcompensacao: @codigo_apresentante).nil?
+    return [ "Informe o código do apresentante." ] if @modo == "apresentante" && @codigo_apresentante.blank?
+    if @modo == "apresentante" && resolver_apresentante(@codigo_apresentante).nil?
       return [ "Apresentante não cadastrado, favor verificar." ]
     end
     return [ "Não existem protestos ativos para distribuição de títulos (cadastro de Protestos)." ] unless Protesto.where(ativa_sc_titulos: true).exists?
@@ -135,14 +143,25 @@ class ExportadorTitulos
     @empresa&.spathdeposito.presence || apresentante&.sdeposito.presence
   end
 
-  def gerar_arquivos(cod_apr:, protesto:, titulos:, pasta:)
+  # Mesma regra de RemessaImporter#call: cad_titulos.cod_apr guarda cad_apresenta.codigo quando
+  # a empresa é o próprio município (cad_empresa.scodmunicipio = 2304400), senão
+  # cad_apresenta.scodcompensacao.
+  def resolver_apresentante(cod_apr)
+    if @empresa&.scodmunicipio == CODMUNICIPIO_EMPRESA_COD_APR_PROPRIO
+      Apresentante.find_by(codigo: cod_apr)
+    else
+      Apresentante.find_by(scodcompensacao: cod_apr)
+    end
+  end
+
+  def gerar_arquivos(cod_apr:, apresentante:, protesto:, titulos:, pasta:)
     tamanho_lote = @empresa&.iquantidadetitporremessa.to_i
     lotes = tamanho_lote.positive? ? titulos.each_slice(tamanho_lote).to_a : [ titulos ]
 
     lotes.each_with_index do |chunk, indice|
       @sequencial = 1
       contagens = calcular_contagens(chunk)
-      no_portador, nome_portador, no_remessa, agencia_centralizadora = dados_portador(cod_apr, chunk.last)
+      no_portador, nome_portador, no_remessa, agencia_centralizadora = dados_portador(cod_apr, apresentante, chunk.last)
       nome_arquivo = nome_arquivo(chunk: chunk, protesto: protesto, indice: indice, no_portador: no_portador)
 
       linhas = [ linha_header(no_portador: no_portador, nome_portador: nome_portador, no_remessa: no_remessa,
@@ -187,13 +206,19 @@ class ExportadorTitulos
     [ qtde_titulos, qtde_indicacoes, qtde_originais, qtde_registros, soma_valor, soma_seguranca ]
   end
 
-  def dados_portador(cod_apr, ultimo_titulo)
+  def dados_portador(cod_apr, apresentante, ultimo_titulo)
     if modo_avulso?
       return [ "000", campo_string("EVENTUAL", 40), "000000", "000000" ]
     end
 
-    remessa = Remessa.where(codapr: cod_apr, snomearquivotexto: ultimo_titulo.snomearquivotexto).order(:isql).first
-    no_portador = numerico?(cod_apr) ? campo_numerico(cod_apr, 3) : campo_string(cod_apr, 3)
+    # O código do portador escrito no arquivo é sempre o scodcompensacao do apresentante — cod_apr
+    # pode ser cad_apresenta.codigo em vez disso (ver #resolver_apresentante), então não dá pra
+    # usar cod_apr direto aqui. Cai em cod_apr só se o apresentante não for encontrado (dado
+    # inconsistente — título referenciando um apresentante que não existe mais).
+    codigo_portador = apresentante&.scodcompensacao.presence || cod_apr
+
+    remessa = Remessa.where(codapr: cod_apr, snomearquivotexto: ultimo_titulo.snomearquivotexto.to_s.strip).order(:isql).first
+    no_portador = numerico?(codigo_portador) ? campo_numerico(codigo_portador, 3) : campo_string(codigo_portador, 3)
     return [ no_portador, campo_string("", 40), "000000", "000000" ] unless remessa
 
     reg = remessa.sregistro.to_s
@@ -251,7 +276,7 @@ class ExportadorTitulos
   # sequencial. Se a linha original não existir mais, não escreve nada (igual ao legado — o
   # título ainda entra nas contagens do header, mesmo sem linha de detalhe no corpo).
   def linha_detalhe(titulo, no_portador)
-    remessa = Remessa.where(codapr: titulo.cod_apr, snomearquivotexto: titulo.snomearquivotexto, isql: titulo.isql).first
+    remessa = Remessa.where(codapr: titulo.cod_apr, snomearquivotexto: titulo.snomearquivotexto.to_s.strip, isql: titulo.isql).first
     return nil unless remessa
 
     reg = remessa.sregistro.to_s
@@ -312,7 +337,8 @@ class ExportadorTitulos
     linha << campo(reg, 566, 1)
     linha << campo(reg, 567, 1)
     linha << campo(reg, 568, 10)
-    linha << campo(reg, 578, 19)
+    linha << campo(reg, 578, 11)
+    linha << @dat_distribuicao.strftime("%d%m%Y")
     linha << (@sequencial >= 10_000 ? campo_numerico(@sequencial, 5) : campo_numerico(@sequencial, 4))
     linha
   end
@@ -322,7 +348,7 @@ class ExportadorTitulos
   # reaproveita cartório/protocolo/tipo-ocorrência/irregularidade já calculados por
   # #linha_detalhe para o título titular (@sc_cartorio/@s_no_protocolo/@s_tip_ocorr/@s_irreg).
   def linha_solidario(titulo, solidario)
-    remessa = Remessa.where(codapr: titulo.cod_apr, snomearquivotexto: titulo.snomearquivotexto, isql: solidario.isql).first
+    remessa = Remessa.where(codapr: titulo.cod_apr, snomearquivotexto: titulo.snomearquivotexto.to_s.strip, isql: solidario.isql).first
     return nil unless remessa
 
     reg = remessa.sregistro.to_s
@@ -379,7 +405,8 @@ class ExportadorTitulos
     linha << campo(reg, 566, 1)
     linha << campo(reg, 567, 1)
     linha << campo(reg, 568, 10)
-    linha << (" " * 19)
+    linha << (" " * 11)
+    linha << @dat_distribuicao.strftime("%d%m%Y")
     linha << campo_numerico(@sequencial, 4)
     linha
   end
@@ -453,13 +480,23 @@ class ExportadorTitulos
     linha << campo_string(texto(bairro_dev), 20)
     linha << (" " * 58)
     linha << (titulo.sefeitofalencia == "Y" || titulo.sefeitofalencia.blank? ? " " : campo_string(titulo.sefeitofalencia, 1))
-    linha << (" " * 30)
+    linha << (" " * 22)
+    linha << @dat_distribuicao.strftime("%d%m%Y")
     linha << campo_numerico(@sequencial, 4)
     linha
   end
 
   def custas_padrao
-    @custas_padrao ||= CfgContador.find_by(id_co: 2)&.ps_titulo_digital.to_s.presence || "0"
+    @custas_padrao ||= formatar_numero_legado(CfgContador.find_by(id_co: 2)&.ps_titulo_digital)
+  end
+
+  # Ruby Float#to_s sempre mostra o "0.0" (ex: 0.0.to_s => "0.0"); VB6 (Str()/CStr() de um
+  # Double) não mostra ".0" pra valores inteiros. Sem isso, campo_string(custas,10) gerava
+  # "0.0       " em vez de "0         " — confirmado contra um arquivo real do sistema legado.
+  def formatar_numero_legado(valor)
+    return "0" if valor.nil?
+
+    valor == valor.to_i ? valor.to_i.to_s : valor.to_s
   end
 
   def especie_abrevia(codigo)

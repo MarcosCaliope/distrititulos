@@ -53,8 +53,15 @@ nenhuma linha original pra reler.
 ### Mudanças deliberadas em relação ao legado
 
 - **Apresentante em vez de banco**: o legado localiza o apresentante e a pasta de depósito via
-  `cad_bancos.cd2`. Esta versão localiza via `cad_apresenta.scodcompensacao` — mesma mudança já
-  feita no lado da importação (`RemessaImporter`, ver `docs/importacao_remessas.md`).
+  `cad_bancos.cd2`. Esta versão localiza via `cad_apresenta` — mas **não** sempre por
+  `scodcompensacao`. `cad_titulos.cod_apr` guarda `cad_apresenta.codigo` **ou**
+  `cad_apresenta.scodcompensacao`, dependendo de `cad_empresa.scodmunicipio` — a mesma regra
+  condicional de `RemessaImporter#call` (`docs/importacao_remessas.md`), replicada aqui em
+  `#resolver_apresentante`. Nesta instalação (empresa em Fortaleza-CE) é sempre `codigo`. Já o
+  **código do portador escrito no arquivo** (header/detalhe/trailer, posição 2-4, e também usado
+  no nome do arquivo) é sempre `scodcompensacao`, independente de qual campo `cod_apr`
+  representa — confirmado byte a byte contra um arquivo real do sistema legado (ver seção
+  seguinte). Ou seja: dois campos diferentes do apresentante, para dois propósitos diferentes.
 - **Tipo de título excluído configurável**: o legado sempre filtra `tipo_tit <> '*'`
   (hardcoded) nas consultas que selecionam títulos para exportar. Esta versão usa
   `cad_empresa.stipotitpadraodev`, caindo em `"*"` se o campo estiver vazio. A única exceção é
@@ -119,35 +126,64 @@ CEF não manda essa informação".
 
 ## Conformidade com o layout oficial Febraban
 
-O layout de largura fixa (header/detalhe/trailer, 600 bytes/linha) segue o **Layout Único de
-Protesto Centralizado v4.3 da Febraban** (`043Febraban.pdf`, 20/04/2010 — mesmo documento que dá
-nome ao campo "Versão do Layout" acima). Esse documento também explica o papel de cada arquivo:
+O layout de largura fixa (header/detalhe/trailer, 600 bytes/linha) é baseado no **Layout Único
+de Protesto Centralizado v4.3 da Febraban** (`043Febraban.pdf`, 20/04/2010 — mesmo documento que
+dá nome ao campo "Versão do Layout" acima), mas **o `.frm` original diverge da especificação em
+alguns pontos deliberadamente** (não são bugs do legado — são convenções que o cartório/sistema
+receptor real já espera há anos). Esse documento também explica o papel de cada arquivo:
 
 - **Arquivo Remessa** (bancos → distribuidor): é o que `RemessaImporter` lê.
 - **Arquivo Confirmação** (distribuidor → bancos): relê a remessa original alterando só os
   campos 31/32/33/34/37 (cartório, protocolo, tipo de ocorrência, data do protocolo, data da
-  ocorrência) — **é exatamente o que `ExportadorTitulos` gera**, apesar do formulário legado se
-  chamar "Exportar Titulos"/"Gera Remessa de Titulos para Protesto".
+  ocorrência) — é estruturalmente próximo do que `ExportadorTitulos` gera, apesar do formulário
+  legado se chamar "Exportar Titulos"/"Gera Remessa de Titulos para Protesto".
 - **Arquivo Retorno** (bancos → cartórios, fase final de liquidação): não é gerado aqui.
 
-Conferido campo a campo contra a tabela oficial do "Registro de Transação – Arquivo Remessa"
-(posições 1-600) e corrigido um desvio real encontrado nessa conferência: o campo 51
-("Complemento do Registro", posição 578-596, 19 bytes, reservado — "preencher com brancos") só
-tinha 11 bytes preservados/em branco nas três linhas de detalhe (`linha_detalhe`,
-`linha_solidario`, `linha_avulso`); os 8 bytes restantes eram sobrescritos com uma repetição da
-data de distribuição. O mesmo desvio existe no `.frm` original (`Mid(rsREM!sRegistro, 578, 11)`
-seguido da data, com um comentário `'19` do próprio autor indicando que sabia do tamanho
-correto) — não foi corrigido lá, e foi corrigido aqui. Um segundo ajuste, para manter as três
-linhas consistentes entre si: `linha_avulso` tinha o campo 37 ("Data da Ocorrência", posição
-478-485) hardcoded como zeros (`"00000000"`, com a data real comentada no `.frm` original) — as
-outras duas linhas já usavam a data de distribuição ali; `linha_avulso` foi alinhada a elas.
+**Validação real**: o usuário forneceu um arquivo gerado de verdade pelo sistema legado em
+produção (`D0Y52508.2622` — cartório 2, apresentante código `3079`/`scodcompensacao "0Y5"`, 1
+protocolo com 8 devedores solidários). Reproduzindo a mesma data/apresentante/cartório com
+`ExportadorTitulos`, **as 11 linhas geradas batem byte a byte com o arquivo real** (script
+auxiliar comparando linha a linha). Esse teste guiou três correções reais e **descartou uma
+"correção" anterior que na verdade era regressão**:
 
-Um terceiro ponto, identificado mas **deliberadamente não alterado** (decisão do usuário): o
-header sempre grava `"BFO"+"SDT"+"TPR"` nos campos 05/06/07 (remetente/destinatário/tipo de
-transação), que é a combinação de um Arquivo **Remessa** novo (banco→distribuidor). Como o que é
-gerado é estruturalmente um Arquivo **Confirmação** (distribuidor→banco), o padrão oficial pede
-`"SDT"+"BFO"+"CRT"` nesses campos. Mantido como está — o cartório/sistema receptor real já
-recebe esse formato há anos e trocar sem confirmar do lado deles poderia quebrar a leitura.
+- **Correção real — código do portador**: vinha sendo relido de `tblremessas.sregistro`
+  (posição 2-4 do header/detalhe/trailer originais) em vez de usar
+  `cad_apresenta.scodcompensacao` diretamente — ver bullet "Apresentante em vez de banco" acima.
+- **Correção real — `snomearquivotexto` com padding inconsistente**: `cad_titulos.snomearquivotexto`
+  pode vir preenchido com espaços à direita até 50 caracteres (import legado, que grava o campo
+  como leu via `Mid()`, sem `Trim()`), enquanto `tblremessas.snomearquivotexto` é gravado sem
+  padding (`RemessaImporter` usa o nome do arquivo direto, já sem espaços). Uma busca
+  `Remessa.where(snomearquivotexto: titulo.snomearquivotexto)` sem `.strip` no valor do título
+  simplesmente não encontrava nada — nenhuma linha de detalhe era escrita (o título ainda
+  contava no header, então o sintoma era "gerou header e trailer mas nenhum título"). Todo uso de
+  `titulo.snomearquivotexto` numa busca em `Remessa` agora passa por `.strip` antes.
+- **Correção real — formatação de número**: `cfg_contadores.ps_titulo_digital` (usado como
+  valor de custas padrão) é uma coluna `float`, e `Float#to_s` em Ruby sempre mostra `"0.0"` em
+  vez de `"0"` pra um valor
+  inteiro (VB6 não mostra o `.0`). Isso só aparecia na variante alfanumérica do campo custas
+  (`campo_string`, texto alinhado à esquerda) — a variante numérica (`campo_numerico`, que só
+  extrai dígitos) coincidentemente dava o resultado certo mesmo com o bug, por isso não foi
+  percebido antes. Corrigido com um helper que só mostra a parte decimal quando ela existe de
+  fato.
+- **Regressão descartada**: uma sessão anterior "corrigiu" o campo 51 ("Complemento do
+  Registro", posição 578-596, 19 bytes) pra um preenchimento de 19 bytes em branco/original,
+  interpretando a instrução oficial "reservado, preencher com brancos" ao pé da letra. O arquivo
+  real mostra que isso está errado na prática: a posição 578-596 contém, de fato, 11 bytes em
+  branco (ou relidos do original, que já vêm em branco) **seguidos da data de distribuição em 8
+  dígitos** (`"           25082026"`) — exatamente o que o `.frm` original já fazia
+  (`Mid(sRegistro, 578, 11)` + `Format(txtDtDistribuicao, "ddmmyyyy")`). Revertido para essa
+  forma nas três linhas (`linha_detalhe`, `linha_solidario`, `linha_avulso`). Moral: a
+  especificação oficial descreve a intenção original do padrão, mas o sistema legado (e o que o
+  cartório real espera) já se desviou dela de propósito nesse ponto — sem uma referência real
+  pra comparar, a leitura "correta" da especificação levava a um resultado byte a byte errado.
+
+Um ponto **identificado mas deliberadamente não alterado** (decisão do usuário, sem arquivo real
+de Confirmação pra comparar): o header sempre grava `"BFO"+"SDT"+"TPR"` nos campos 05/06/07
+(remetente/destinatário/tipo de transação), que é a combinação de um Arquivo **Remessa** novo
+(banco→distribuidor). Como o que é gerado é estruturalmente mais próximo de um Arquivo
+**Confirmação** (distribuidor→banco), o padrão oficial pediria `"SDT"+"BFO"+"CRT"` nesses campos
+— mas o arquivo real de exemplo também usa `"BFO"+"SDT"+"TPR"` (ver linha 0 do header
+comparado acima), então isso **não é mais uma dúvida em aberto**: é o valor certo, confirmado.
 
 ## Envio por e-mail
 
@@ -183,9 +219,14 @@ descomentar o bloco.
   poucos títulos), `tblarquivos` conferido. Esse valor ficou assim deliberadamente (não é mais
   o caminho Windows original) pra viabilizar teste real neste ambiente. Não foi testado o envio
   de e-mail de fato (exigiria credenciais SMTP reais).
-- Comparado byte a byte contra um arquivo real gerado pelo sistema legado
+- Comparado byte a byte contra um arquivo real gerado pelo sistema legado em produção
   (`D0Y52508.2622`, fornecido pelo usuário: 1 título com 8 devedores solidários pro cartório 2,
-  apresentante com `scodcompensacao = "0Y5"`) — confirmou o formato geral (600 bytes/linha,
-  header/detalhe/trailer) e revelou que o código do portador deve vir de
-  `cad_apresenta.scodcompensacao`, não relido de `tblremessas.sregistro` (ver seção "Nome do
-  arquivo e cabeçalho/trailer").
+  apresentante código `3079`/`scodcompensacao "0Y5"`, data `25/08/2026`) — reproduzindo a mesma
+  data/apresentante/cartório contra o dado real (o título e seus 8 solidários realmente existem
+  no banco), **as 11 linhas geradas batem byte a byte com o arquivo real** depois das correções
+  descritas em "Conformidade com o layout oficial Febraban" (código do portador via
+  `scodcompensacao`, `.strip` no `snomearquivotexto` usado pra buscar em `tblremessas`,
+  formatação de `ps_titulo_digital`, e a reversão da "correção" incorreta do campo 51). Script
+  auxiliar (`raise ActiveRecord::Rollback` + `File.write` redirecionado, mesmo método de sempre)
+  gerou os três arquivos do apresentante `3079` na data (cartórios 2, 7 e 8) e comparou linha a
+  linha contra o arquivo de referência.
