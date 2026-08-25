@@ -41,10 +41,12 @@ class TitulosController < ApplicationController
 
   def show
     @devedor_solidarios = DevedorSolidario.where(protocolo: @titulo.protocolo)
+    @apresentante = Apresentante.resolver_por_cod_apr(@titulo.cod_apr)
   end
 
   def new
     @titulo = Titulo.new
+    @apresentante = nil
   end
 
   def create
@@ -52,17 +54,20 @@ class TitulosController < ApplicationController
     if @titulo.save
       redirect_to @titulo, notice: "Título criado com sucesso."
     else
+      @apresentante = Apresentante.resolver_por_cod_apr(@titulo.cod_apr)
       render :new, status: :unprocessable_entity
     end
   end
 
   def edit
+    @apresentante = Apresentante.resolver_por_cod_apr(@titulo.cod_apr)
   end
 
   def update
     if @titulo.update(titulo_params)
       redirect_to @titulo, notice: "Título atualizado com sucesso."
     else
+      @apresentante = Apresentante.resolver_por_cod_apr(@titulo.cod_apr)
       render :edit, status: :unprocessable_entity
     end
   end

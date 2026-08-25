@@ -46,7 +46,12 @@
     <li class="list-group-item"><strong>Ofício:</strong> <%= @titulo.oficio %></li>
     <li class="list-group-item"><strong>Status:</strong> <%= @titulo.status %></li>
     <li class="list-group-item"><strong>Código apresentante:</strong> <%= @titulo.cod_apr %></li>
-    <li class="list-group-item"><strong>Nome apresentante:</strong> <%= @titulo.nome_apr %></li>
+    <li class="list-group-item">
+      <strong>Nome apresentante:</strong> <%= @titulo.nome_apr %>
+      <% if @apresentante&.scodcompensacao.present? %>
+        (código de compensação: <%= @apresentante.scodcompensacao %>)
+      <% end %>
+    </li>
     <li class="list-group-item"><strong>Banco:</strong> <%= @titulo.cd_banco %></li>
     <li class="list-group-item"><strong>Agência:</strong> <%= @titulo.cd_agencia %></li>
   </ul>

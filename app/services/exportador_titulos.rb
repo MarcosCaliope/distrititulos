@@ -6,12 +6,12 @@
 #
 # Mudanças deliberadas em relação ao legado (ver docs/exportacao_titulos.md para detalhes):
 # - apresentante/pasta de depósito localizados via cad_apresenta (não mais cad_bancos.cd2),
-#   mesma mudança já feita na importação (RemessaImporter) — mas cad_titulos.cod_apr guarda ou
+#   mesma mudança já feita na importação (RemessaImporter) — cad_titulos.cod_apr guarda ou
 #   cad_apresenta.codigo ou cad_apresenta.scodcompensacao dependendo de
-#   cad_empresa.scodmunicipio (mesma regra de RemessaImporter#call, replicada aqui em
-#   #resolver_apresentante), então a busca do apresentante por cod_apr precisa checar o campo
-#   certo. Já o código do portador escrito no arquivo (header/detalhe/trailer/nome do arquivo)
-#   é sempre cad_apresenta.scodcompensacao, independente de qual campo o cod_apr representa.
+#   cad_empresa.scodmunicipio (ver Apresentante.resolver_por_cod_apr, mesma regra usada por
+#   RemessaImporter#call). Já o código do portador escrito no arquivo (header/detalhe/trailer/
+#   nome do arquivo) é sempre cad_apresenta.scodcompensacao, independente de qual campo o
+#   cod_apr representa.
 # - tipo_tit excluído é configurável (cad_empresa.stipotitpadraodev, cai em "*" se vazio) em
 #   vez do "*" hardcoded do legado — exceto na decisão de imprimir irregularidade em
 #   GeraDetalhe/GeraSolidario, que no legado sempre comparava com o literal "*" (preservado).
@@ -42,9 +42,6 @@ class ExportadorTitulos
   # Campo "Versão do Layout" do padrão Febraban (posição 90-92 do header) — constante da
   # própria especificação ("043Febraban.pdf", Layout Único v4.3), não um código de portador.
   VERSAO_LAYOUT = "043"
-  # Mesma constante/regra de RemessaImporter: define se cad_titulos.cod_apr guarda
-  # cad_apresenta.codigo (quando a empresa é o próprio município) ou scodcompensacao.
-  CODMUNICIPIO_EMPRESA_COD_APR_PROPRIO = "2304400"
 
   def initialize(dat_distribuicao:, modo:, codigo_apresentante: nil)
     @dat_distribuicao = parse_data(dat_distribuicao)
@@ -147,11 +144,7 @@ class ExportadorTitulos
   # a empresa é o próprio município (cad_empresa.scodmunicipio = 2304400), senão
   # cad_apresenta.scodcompensacao.
   def resolver_apresentante(cod_apr)
-    if @empresa&.scodmunicipio == CODMUNICIPIO_EMPRESA_COD_APR_PROPRIO
-      Apresentante.find_by(codigo: cod_apr)
-    else
-      Apresentante.find_by(scodcompensacao: cod_apr)
-    end
+    Apresentante.resolver_por_cod_apr(cod_apr)
   end
 
   def gerar_arquivos(cod_apr:, apresentante:, protesto:, titulos:, pasta:)

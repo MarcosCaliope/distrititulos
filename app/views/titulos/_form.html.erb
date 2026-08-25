@@ -110,6 +110,9 @@
   <div class="mb-3">
     <%= f.label :nome_apr, "Nome apresentante", class: "form-label" %>
     <%= f.text_field :nome_apr, maxlength: 45, class: "form-control" %>
+    <% if @apresentante&.scodcompensacao.present? %>
+      <div class="form-text">Código de compensação: <%= @apresentante.scodcompensacao %></div>
+    <% end %>
   </div>
 
   <div class="mb-3">
