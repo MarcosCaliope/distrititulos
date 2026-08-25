@@ -136,6 +136,16 @@
   </div>
 
   <div class="mb-3">
+    <%= f.label :stipotitpadraodev, "Tipo de título padrão de devolução", class: "form-label" %>
+    <%= f.text_field :stipotitpadraodev, maxlength: 3, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :sapresentanteeventual, "Apresentante eventual padrão", class: "form-label" %>
+    <%= f.text_field :sapresentanteeventual, maxlength: 10, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
     <%= f.label :imodeloctd, "Modelo CTD", class: "form-label" %>
     <%= f.number_field :imodeloctd, class: "form-control" %>
   </div>

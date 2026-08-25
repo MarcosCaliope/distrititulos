@@ -53,7 +53,8 @@ class EmpresasController < ApplicationController
       :spathlogo, :inooficio, :stitulo, :spatharquivos, :imodeloctd, :snolivro, :ifolha,
       :iqtdefolhas, :iqtdetitulosporfolha, :binseretitulorejeitado, :scodmunicipio,
       :bselodigital, :spathdeposito, :spathdepositodistribuidor, :spathprocessados,
-      :spathconfirmados, :iquantidadetitporremessa
+      :spathconfirmados, :iquantidadetitporremessa, :stipotitpadraodev,
+      :sapresentanteeventual
     )
   end
 end

@@ -118,6 +118,8 @@ ActiveRecord::Schema[8.0].define(version: 0) do
     t.string "spathprocessados", limit: 150
     t.string "spathconfirmados", limit: 150
     t.integer "iquantidadetitporremessa"
+    t.string "stipotitpadraodev", limit: 3
+    t.string "sapresentanteeventual", limit: 10
   end
 
   create_table "cad_especies", primary_key: "codigo", id: { type: :string, limit: 3 }, force: :cascade do |t|

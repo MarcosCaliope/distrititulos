@@ -26,4 +26,6 @@ class Empresa < ApplicationRecord
   validates :spathdepositodistribuidor, length: { maximum: 150 }
   validates :spathprocessados, length: { maximum: 150 }
   validates :spathconfirmados, length: { maximum: 150 }
+  validates :stipotitpadraodev, length: { maximum: 3 }
+  validates :sapresentanteeventual, length: { maximum: 10 }
 end
