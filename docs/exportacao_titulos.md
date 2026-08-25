@@ -104,9 +104,45 @@ vira `.2371`). No modo avulso, `reg = "000"` e a extensão usa o ano com 2 dígi
 `"1"`. Arquivos além do primeiro de uma mesma divisão por quantidade ganham um sufixo numérico
 incremental no nome (`2`, `3`, ...).
 
-O header tem um trecho sempre hardcoded — `"043" + "2304400"` (código do apresentante forçado +
-código IBGE de Fortaleza-CE) — comentário do legado: "estou forçando o código do município pq a
-CEF não manda essa informação". Não vem de `cad_empresa.scodmunicipio`; é proposital.
+O header tem um trecho sempre hardcoded — `VERSAO_LAYOUT ("043") + MUNICIPIO_FORCADO
+("2304400")`. `"043"` não é um código de portador: é o campo oficial "Versão do Layout" do
+padrão Febraban (posição 90-92, ver seção seguinte) — o próprio número da versão do layout
+("Layout Único – Versão 4.3"), uma constante da especificação, não algo calculado. Já
+`"2304400"` (código IBGE de Fortaleza-CE) é sempre forçado, não vem de
+`cad_empresa.scodmunicipio` — comentário do legado: "estou forçando o código do município pq a
+CEF não manda essa informação".
+
+## Conformidade com o layout oficial Febraban
+
+O layout de largura fixa (header/detalhe/trailer, 600 bytes/linha) segue o **Layout Único de
+Protesto Centralizado v4.3 da Febraban** (`043Febraban.pdf`, 20/04/2010 — mesmo documento que dá
+nome ao campo "Versão do Layout" acima). Esse documento também explica o papel de cada arquivo:
+
+- **Arquivo Remessa** (bancos → distribuidor): é o que `RemessaImporter` lê.
+- **Arquivo Confirmação** (distribuidor → bancos): relê a remessa original alterando só os
+  campos 31/32/33/34/37 (cartório, protocolo, tipo de ocorrência, data do protocolo, data da
+  ocorrência) — **é exatamente o que `ExportadorTitulos` gera**, apesar do formulário legado se
+  chamar "Exportar Titulos"/"Gera Remessa de Titulos para Protesto".
+- **Arquivo Retorno** (bancos → cartórios, fase final de liquidação): não é gerado aqui.
+
+Conferido campo a campo contra a tabela oficial do "Registro de Transação – Arquivo Remessa"
+(posições 1-600) e corrigido um desvio real encontrado nessa conferência: o campo 51
+("Complemento do Registro", posição 578-596, 19 bytes, reservado — "preencher com brancos") só
+tinha 11 bytes preservados/em branco nas três linhas de detalhe (`linha_detalhe`,
+`linha_solidario`, `linha_avulso`); os 8 bytes restantes eram sobrescritos com uma repetição da
+data de distribuição. O mesmo desvio existe no `.frm` original (`Mid(rsREM!sRegistro, 578, 11)`
+seguido da data, com um comentário `'19` do próprio autor indicando que sabia do tamanho
+correto) — não foi corrigido lá, e foi corrigido aqui. Um segundo ajuste, para manter as três
+linhas consistentes entre si: `linha_avulso` tinha o campo 37 ("Data da Ocorrência", posição
+478-485) hardcoded como zeros (`"00000000"`, com a data real comentada no `.frm` original) — as
+outras duas linhas já usavam a data de distribuição ali; `linha_avulso` foi alinhada a elas.
+
+Um terceiro ponto, identificado mas **deliberadamente não alterado** (decisão do usuário): o
+header sempre grava `"BFO"+"SDT"+"TPR"` nos campos 05/06/07 (remetente/destinatário/tipo de
+transação), que é a combinação de um Arquivo **Remessa** novo (banco→distribuidor). Como o que é
+gerado é estruturalmente um Arquivo **Confirmação** (distribuidor→banco), o padrão oficial pede
+`"SDT"+"BFO"+"CRT"` nesses campos. Mantido como está — o cartório/sistema receptor real já
+recebe esse formato há anos e trocar sem confirmar do lado deles poderia quebrar a leitura.
 
 ## Envio por e-mail
 
@@ -135,6 +171,10 @@ descomentar o bloco.
   da correção da transliteração de acentos (sem ela, um nome com "SÃO LUIZ" gerava uma linha de
   601 bytes, já que "Ã" ocupa 2 bytes em UTF-8 embora conte como 1 caractere).
   `TblArquivo.count` conferido antes/durante/depois do rollback (sem mudança).
-- Não foi testado de fato escrevendo num caminho de depósito real, nem enviando e-mail — os
-  dois exigiriam acesso a infraestrutura fora deste ambiente de desenvolvimento (pasta de rede
-  compartilhada com o servidor legado, e credenciais SMTP reais).
+- Testado de fato via HTTP (`create`), com `cad_empresa.spathdeposito` temporariamente apontado
+  para `/mnt/d/Fontes_SIAC_Andre/Projetos Smart/Distribuidor/dados/` — o caminho real do sistema
+  legado, acessível a partir daqui via o mapeamento automático do WSL para o drive `D:` do
+  Windows (mesma máquina). 5 arquivos gerados de verdade nessa pasta (modo avulso, data com
+  poucos títulos), `tblarquivos` conferido, e o campo revertido ao valor original depois
+  (`D:\Fontes_SIAC_Andre\Projetos Smart\Distribuidor\dados\`) — essa mudança de dado não ficou
+  permanente. Não foi testado o envio de e-mail de fato (exigiria credenciais SMTP reais).

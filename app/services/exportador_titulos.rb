@@ -34,7 +34,9 @@ class ExportadorTitulos
   # Sempre forçado, não vem de cad_empresa.scodmunicipio — comentário do legado: "estou
   # forçando o codigo do municipio pq a CEF não manda essa informação".
   MUNICIPIO_FORCADO = "2304400"
-  CODIGO_PORTADOR_FORCADO = "043"
+  # Campo "Versão do Layout" do padrão Febraban (posição 90-92 do header) — constante da
+  # própria especificação ("043Febraban.pdf", Layout Único v4.3), não um código de portador.
+  VERSAO_LAYOUT = "043"
 
   def initialize(dat_distribuicao:, modo:, codigo_apresentante: nil)
     @dat_distribuicao = parse_data(dat_distribuicao)
@@ -226,7 +228,7 @@ class ExportadorTitulos
     linha << qtde_indicacoes.to_s.rjust(4, "0")
     linha << qtde_originais.to_s.rjust(4, "0")
     linha << campo_string(agencia_centralizadora, 6)
-    linha << CODIGO_PORTADOR_FORCADO << MUNICIPIO_FORCADO << (" " * 497)
+    linha << VERSAO_LAYOUT << MUNICIPIO_FORCADO << (" " * 497)
     linha << "0001"
     linha
   end
@@ -312,8 +314,7 @@ class ExportadorTitulos
     linha << campo(reg, 566, 1)
     linha << campo(reg, 567, 1)
     linha << campo(reg, 568, 10)
-    linha << campo(reg, 578, 11)
-    linha << @dat_distribuicao.strftime("%d%m%Y")
+    linha << campo(reg, 578, 19)
     linha << (@sequencial >= 10_000 ? campo_numerico(@sequencial, 5) : campo_numerico(@sequencial, 4))
     linha
   end
@@ -380,8 +381,7 @@ class ExportadorTitulos
     linha << campo(reg, 566, 1)
     linha << campo(reg, 567, 1)
     linha << campo(reg, 568, 10)
-    linha << (" " * 11)
-    linha << @dat_distribuicao.strftime("%d%m%Y")
+    linha << (" " * 19)
     linha << campo_numerico(@sequencial, 4)
     linha
   end
@@ -450,13 +450,12 @@ class ExportadorTitulos
     linha << titulo.dat_rece.strftime("%d%m%Y")
     linha << campo_numerico(custas, 10)
     linha << " "
-    linha << "00000000"
+    linha << @dat_distribuicao.strftime("%d%m%Y")
     linha << "  "
     linha << campo_string(texto(bairro_dev), 20)
     linha << (" " * 58)
     linha << (titulo.sefeitofalencia == "Y" || titulo.sefeitofalencia.blank? ? " " : campo_string(titulo.sefeitofalencia, 1))
-    linha << (" " * 22)
-    linha << @dat_distribuicao.strftime("%d%m%Y")
+    linha << (" " * 30)
     linha << campo_numerico(@sequencial, 4)
     linha
   end
