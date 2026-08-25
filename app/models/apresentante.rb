@@ -18,4 +18,5 @@ class Apresentante < ApplicationRecord
   validates :sestado, length: { maximum: 2 }
   validates :scontato, length: { maximum: 30 }
   validates :sfone, length: { maximum: 10 }
+  validates :sdeposito, length: { maximum: 150 }
 end

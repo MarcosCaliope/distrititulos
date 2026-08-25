@@ -30,6 +30,12 @@ Processos (the actual business workflow):
   (`frmDistribuicaoNew.frm`): for títulos received on a date, draws a cartório/distribuidor
   via a round-robin grid (`tbldistribuicao`) balanced by faixa de valor, and rewrites the
   título's `protocolo`. See `docs/distribuicao_titulos.md`.
+- **Exportação de títulos** — ports the legacy VB6 export (`frmExportaTitulos.frm`): for a
+  distribution date, generates one fixed-width remessa export file per cartório de protesto ×
+  apresentante (largely re-slicing each título's original `tblremessas.sregistro` line into a
+  new layout), optionally split into several files by `cad_empresa.iquantidadetitporremessa`,
+  registers each file in `tblarquivos`, and e-mails them to the cartórios (`ExportacaoMailer`,
+  SMTP credentials not included). See `docs/exportacao_titulos.md`.
 
 When adding a model for one of the still-unmapped legacy tables, follow the pattern in
 `app/models/*.rb`: set `self.table_name` and `self.primary_key` explicitly. Composite primary

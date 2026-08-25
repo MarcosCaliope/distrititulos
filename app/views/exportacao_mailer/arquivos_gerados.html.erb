@@ -1,0 +1,9 @@
+<p>Prezado(a) <%= @protesto.pro_cartorio %>,</p>
+
+<p>Seguem em anexo os arquivos de remessa de exportação de títulos para protesto.</p>
+
+<ul>
+  <% @tbl_arquivos.each do |arquivo| %>
+    <li><%= arquivo.spath %></li>
+  <% end %>
+</ul>

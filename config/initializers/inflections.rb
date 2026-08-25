@@ -20,4 +20,5 @@ ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.irregular "distribuidor", "distribuidores"
   inflect.irregular "especie", "especies"
   inflect.irregular "distribuicao", "distribuicoes"
+  inflect.irregular "exportacao", "exportacoes"
 end

@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="mb-0">Exportação de títulos</h1>
+  <%= link_to "Voltar", titulos_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<p class="text-muted">
+  Gera um arquivo de remessa de exportação (largura fixa) por cartório de protesto para os
+  títulos distribuídos na data informada, e grava o registro do arquivo gerado.
+</p>
+
+<%= form_with url: exportacoes_path, method: :post, class: "row g-2 align-items-end mb-4" do %>
+  <div class="col-auto">
+    <%= label_tag :dat_distribuicao, "Data de distribuição", class: "form-label" %>
+    <%= date_field_tag :dat_distribuicao, @dat_distribuicao, class: "form-control" %>
+  </div>
+
+  <div class="col-auto">
+    <%= label_tag :modo, "Modo", class: "form-label" %>
+    <%= select_tag :modo,
+          options_for_select(
+            [ [ "Apresentante específico", "apresentante" ], [ "Todos os apresentantes (T)", "todos" ], [ "Avulsos/digitados (0)", "avulso" ] ],
+            @modo
+          ), class: "form-select" %>
+  </div>
+
+  <div class="col-auto">
+    <%= label_tag :codigo_apresentante, "Código de compensação do apresentante", class: "form-label" %>
+    <%= text_field_tag :codigo_apresentante, @codigo_apresentante, maxlength: 6, class: "form-control" %>
+    <div class="form-text">Só é usado no modo "Apresentante específico".</div>
+  </div>
+
+  <div class="col-auto">
+    <%= submit_tag "Exportar", class: "btn btn-primary", data: { turbo_confirm: "Confirma a geração dos arquivos de remessa de exportação para esta data?" } %>
+  </div>
+<% end %>
+
+<hr>
+
+<h2 class="h5">Enviar e-mail dos arquivos gerados</h2>
+<p class="text-muted">
+  Envia por e-mail, para cada cartório de protesto, os arquivos já gerados na data informada
+  (não gera arquivos novos).
+</p>
+
+<%= form_with url: enviar_email_exportacoes_path, method: :post, class: "row g-2 align-items-end" do %>
+  <div class="col-auto">
+    <%= label_tag :dat_distribuicao_email, "Data de distribuição", class: "form-label" %>
+    <%= date_field_tag :dat_distribuicao, @dat_distribuicao, id: "dat_distribuicao_email", class: "form-control" %>
+  </div>
+  <div class="col-auto">
+    <%= submit_tag "Enviar e-mail", class: "btn btn-outline-primary", data: { turbo_confirm: "Confirma o envio dos arquivos gerados nesta data para os cartórios de protesto?" } %>
+  </div>
+<% end %>

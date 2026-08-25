@@ -44,6 +44,7 @@ ActiveRecord::Schema[8.0].define(version: 0) do
     t.string "tipo", limit: 1
     t.string "convenio", limit: 1
     t.string "scustaantecipada", limit: 1
+    t.string "sdeposito", limit: 150
     t.index ["codigo"], name: "cad_apresenta_codigo"
     t.index ["nome"], name: "cad_apresenta_nome"
   end

@@ -42,6 +42,11 @@ Rails.application.routes.draw do
       delete :desfazer
     end
   end
+  resources :exportacoes, only: %i[new create] do
+    collection do
+      post :enviar_email
+    end
+  end
 
   # Defines the root path route ("/")
   root "home#index"
