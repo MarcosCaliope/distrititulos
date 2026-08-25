@@ -35,7 +35,9 @@ Processos (the actual business workflow):
   apresentante (largely re-slicing each título's original `tblremessas.sregistro` line into a
   new layout), optionally split into several files by `cad_empresa.iquantidadetitporremessa`,
   registers each file in `tblarquivos`, and e-mails them to the cartórios (`ExportacaoMailer`,
-  SMTP credentials not included). See `docs/exportacao_titulos.md`.
+  SMTP settings read from `cad_empresa` — `ssmtphost`/`ssmtpusuario`/`ssmtpsenha`/etc.,
+  `ssmtpsenha` encrypted at rest via Active Record Encryption — not from static Rails config).
+  See `docs/exportacao_titulos.md`.
 
 When adding a model for one of the still-unmapped legacy tables, follow the pattern in
 `app/models/*.rb`: set `self.table_name` and `self.primary_key` explicitly. Composite primary

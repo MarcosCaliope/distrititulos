@@ -180,5 +180,52 @@
     <%= f.label :bselodigital, "Selo digital", class: "form-check-label" %>
   </div>
 
+  <h2 class="h5 mt-4">E-mail (SMTP)</h2>
+  <p class="text-muted">
+    Usado para enviar os arquivos de exportação de títulos aos cartórios de protesto.
+    Gmail: <code>smtp.gmail.com</code>, porta <code>587</code>, TLS — exige uma
+    <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener">senha de app</a>,
+    não a senha normal da conta. Outlook/Office 365: <code>smtp.office365.com</code>, porta
+    <code>587</code>, TLS.
+  </p>
+
+  <div class="mb-3">
+    <%= f.label :ssmtphost, "Servidor SMTP", class: "form-label" %>
+    <%= f.text_field :ssmtphost, maxlength: 100, placeholder: "smtp.gmail.com", class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ismtpporta, "Porta", class: "form-label" %>
+    <%= f.number_field :ismtpporta, placeholder: 587, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ssmtpusuario, "Usuário", class: "form-label" %>
+    <%= f.text_field :ssmtpusuario, maxlength: 100, class: "form-control" %>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ssmtpsenha, "Senha", class: "form-label" %>
+    <%= f.password_field :ssmtpsenha, maxlength: 100, autocomplete: "new-password", class: "form-control" %>
+    <div class="form-text">
+      <% if empresa.persisted? && empresa.ssmtpsenha.present? %>
+        Já configurada. Deixe em branco para manter a senha atual.
+      <% else %>
+        Ainda não configurada.
+      <% end %>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <%= f.label :ssmtpremetente, "E-mail remetente", class: "form-label" %>
+    <%= f.text_field :ssmtpremetente, maxlength: 100, class: "form-control" %>
+    <div class="form-text">Se vazio, usa o campo Usuário.</div>
+  </div>
+
+  <div class="mb-3 form-check">
+    <%= f.check_box :bsmtptls, { class: "form-check-input", checked: empresa.bsmtptls.nil? ? true : empresa.bsmtptls }, "1", "0" %>
+    <%= f.label :bsmtptls, "Usar TLS (STARTTLS)", class: "form-check-label" %>
+  </div>
+
   <%= f.submit class: "btn btn-primary" %>
 <% end %>

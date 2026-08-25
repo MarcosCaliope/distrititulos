@@ -121,6 +121,12 @@ ActiveRecord::Schema[8.0].define(version: 0) do
     t.integer "iquantidadetitporremessa"
     t.string "stipotitpadraodev", limit: 3
     t.string "sapresentanteeventual", limit: 10
+    t.string "ssmtphost", limit: 100
+    t.integer "ismtpporta"
+    t.string "ssmtpusuario", limit: 100
+    t.string "ssmtpsenha", limit: 500
+    t.string "ssmtpremetente", limit: 100
+    t.boolean "bsmtptls"
   end
 
   create_table "cad_especies", primary_key: "codigo", id: { type: :string, limit: 3 }, force: :cascade do |t|

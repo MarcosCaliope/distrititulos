@@ -193,11 +193,31 @@ e-mail por cartório de protesto, com os arquivos daquele cartório em anexo (`t
 pro_email`, `cc: scopiaemail` se presente). Igual ao legado, que também separava "Exportar" de
 "Enviar Email" em dois botões distintos.
 
-**Configuração SMTP real não faz parte deste código.**
-`config/environments/production.rb` já tem um bloco `smtp_settings` comentado, usando
-`Rails.application.credentials.dig(:smtp, ...)` — para o envio funcionar de verdade em
-produção, alguém precisa preencher essas credenciais (`bin/rails credentials:edit`) e
-descomentar o bloco.
+**As credenciais SMTP ficam em `cad_empresa`, não em `config.action_mailer.smtp_settings`.**
+Seis campos novos: `ssmtphost`, `ismtpporta`, `ssmtpusuario`, `ssmtpsenha`, `ssmtpremetente`,
+`bsmtptls` — configuráveis pelo cadastro de Empresas (`app/views/empresas/_form.html.erb`, com
+texto de ajuda para Gmail/Outlook). `ExportacaoMailer` lê `Empresa.take` e monta
+`delivery_method_options` dinamicamente por e-mail enviado (`address`, `port`, `user_name`,
+`password`, `authentication: :plain`, `enable_starttls_auto`), em vez de usar a config estática
+de `config/environments/*.rb` — assim o cartório troca de provedor (ou credencial) pela tela,
+sem precisar mexer em código/deploy. Se `ssmtphost` estiver vazio, cai no comportamento padrão
+do Rails (sem SMTP configurado — tenta `localhost:25` e falha silenciosamente em dev, já que
+`raise_delivery_errors = false`).
+
+`ssmtpsenha` é cifrada em repouso via
+[Active Record Encryption](https://guides.rubyonrails.org/active_record_encryption.html)
+(`encrypts :ssmtpsenha` em `Empresa`) — dá acesso a uma conta de e-mail real. As chaves
+(`primary_key`/`deterministic_key`/`key_derivation_salt`, geradas com
+`bin/rails db:encryption:init`) ficam em `Rails.application.credentials.active_record_encryption`,
+não no banco. `EmpresasController#empresa_params` remove `ssmtpsenha` dos parâmetros quando vem
+em branco, pra deixar o campo em branco no formulário não apagar a senha já salva (mesmo padrão
+usado por qualquer campo de senha em formulário Rails) — o campo `show`/`_form` nunca exibe a
+senha de volta, só se está "Configurada" ou não.
+
+Gmail exige uma [senha de app](https://myaccount.google.com/apppasswords) (não a senha normal
+da conta) desde que desativou "apps menos seguros"; Outlook/Office 365 usa
+`smtp.office365.com`, porta 587, TLS — ambos com autenticação normal de usuário/senha (não
+OAuth2, que exigiria um fluxo bem mais complexo — fora do escopo aqui).
 
 ## Como foi testado
 

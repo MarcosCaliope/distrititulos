@@ -47,14 +47,18 @@ class EmpresasController < ApplicationController
   end
 
   def empresa_params
-    params.require(:empresa).permit(
+    permitted = params.require(:empresa).permit(
       :emp_id, :snome, :sfantasia, :sendereco, :sbairro, :scidade, :sestado, :scep, :scnpj,
       :sfone, :semail, :sweb, :snomeresponsavel, :scpfresponsavel, :snomesubstituto,
       :spathlogo, :inooficio, :stitulo, :spatharquivos, :imodeloctd, :snolivro, :ifolha,
       :iqtdefolhas, :iqtdetitulosporfolha, :binseretitulorejeitado, :scodmunicipio,
       :bselodigital, :spathdeposito, :spathdepositodistribuidor, :spathprocessados,
       :spathconfirmados, :iquantidadetitporremessa, :stipotitpadraodev,
-      :sapresentanteeventual
+      :sapresentanteeventual, :ssmtphost, :ismtpporta, :ssmtpusuario, :ssmtpsenha,
+      :ssmtpremetente, :bsmtptls
     )
+    # Deixar a senha em branco no formulário não deve apagar a já salva.
+    permitted.delete(:ssmtpsenha) if permitted[:ssmtpsenha].blank?
+    permitted
   end
 end

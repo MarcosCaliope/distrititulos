@@ -2,6 +2,11 @@ class Empresa < ApplicationRecord
   self.table_name = "cad_empresa"
   self.primary_key = "emp_id"
 
+  # Cifrada em repouso (Active Record Encryption) — dá acesso a uma conta de e-mail real da
+  # empresa. Chaves em Rails credentials (active_record_encryption), geradas via
+  # `bin/rails db:encryption:init`.
+  encrypts :ssmtpsenha
+
   validates :emp_id, presence: true, length: { maximum: 1 }
   validates :snome, length: { maximum: 100 }
   validates :sfantasia, length: { maximum: 30 }
@@ -28,4 +33,8 @@ class Empresa < ApplicationRecord
   validates :spathconfirmados, length: { maximum: 150 }
   validates :stipotitpadraodev, length: { maximum: 3 }
   validates :sapresentanteeventual, length: { maximum: 10 }
+  validates :ssmtphost, length: { maximum: 100 }
+  validates :ssmtpusuario, length: { maximum: 100 }
+  validates :ssmtpsenha, length: { maximum: 100 }
+  validates :ssmtpremetente, length: { maximum: 100 }
 end

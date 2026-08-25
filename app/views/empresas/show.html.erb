@@ -42,5 +42,11 @@
     <li class="list-group-item"><strong>Títulos por folha:</strong> <%= @empresa.iqtdetitulosporfolha %></li>
     <li class="list-group-item"><strong>Insere título rejeitado:</strong> <%= @empresa.binseretitulorejeitado ? "Sim" : "Não" %></li>
     <li class="list-group-item"><strong>Selo digital:</strong> <%= @empresa.bselodigital ? "Sim" : "Não" %></li>
+    <li class="list-group-item"><strong>Servidor SMTP:</strong> <%= @empresa.ssmtphost %></li>
+    <li class="list-group-item"><strong>Porta SMTP:</strong> <%= @empresa.ismtpporta %></li>
+    <li class="list-group-item"><strong>Usuário SMTP:</strong> <%= @empresa.ssmtpusuario %></li>
+    <li class="list-group-item"><strong>Senha SMTP:</strong> <%= @empresa.ssmtpsenha.present? ? "Configurada" : "Não configurada" %></li>
+    <li class="list-group-item"><strong>E-mail remetente:</strong> <%= @empresa.ssmtpremetente %></li>
+    <li class="list-group-item"><strong>TLS (STARTTLS):</strong> <%= @empresa.bsmtptls == false ? "Não" : "Sim" %></li>
   </ul>
 </div>
