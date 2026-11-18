@@ -36,7 +36,9 @@ Processos (the actual business workflow):
   new layout), optionally split into several files by `cad_empresa.iquantidadetitporremessa`,
   registers each file in `tblarquivos`, and e-mails them to the cartórios (`ExportacaoMailer`,
   SMTP settings read from `cad_empresa` — `ssmtphost`/`ssmtpusuario`/`ssmtpsenha`/etc.,
-  `ssmtpsenha` encrypted at rest via Active Record Encryption — not from static Rails config).
+  `ssmtpsenha` encrypted at rest via Active Record Encryption, keys in Rails credentials under
+  `active_record_encryption`, generated with `bin/rails db:encryption:init` — not from static
+  Rails config). E-mails are sent with `deliver_later`, so they need `bin/jobs` running.
   See `docs/exportacao_titulos.md`.
 
 When adding a model for one of the still-unmapped legacy tables, follow the pattern in
@@ -45,7 +47,7 @@ keys are common (e.g. `Devedor`'s `["tipo_doc", "cpf_cgc"]`, `Remessa`'s
 `["codapr", "snomearquivotexto", "isql"]`) — this uses Rails 8's native composite primary key
 support, which gives the model a `param_delimiter` class method. Controllers for these models
 join the key with it to build/parse the `:id` param (see `DevedoresController#set_devedor`,
-`RemessasController#set_devedor`); routes for them need `constraints: { id: /.+/ }` since the
+`RemessasController#set_remessa`); routes for them need `constraints: { id: /.+/ }` since the
 joined key contains the delimiter (see the `:remessas` route).
 
 ## Commands
@@ -54,7 +56,7 @@ joined key contains the delimiter (see the `:remessas` route).
 bin/setup                          # install deps, prepare db, start server
 bin/rails server                   # run the app
 bin/rails console
-bin/jobs                           # run the Solid Queue worker (needed for remessa imports, which run as a background job)
+bin/jobs                           # run the Solid Queue worker (needed for remessa imports and exportação e-mails, both run via Active Job)
 
 bin/rails test                     # run unit/integration tests
 bin/rails test:system              # run system tests (Capybara + headless Chrome)
