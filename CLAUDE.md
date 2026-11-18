@@ -88,7 +88,7 @@ placeholders), so there's no existing test to pattern-match against yet.
 - Development database connection is fully env-driven (`CENTRAL_DB_NAME`, `CENTRAL_DB_HOST`,
   `CENTRAL_DB_PORT`, `CENTRAL_DB_USER`, `CENTRAL_DB_PASSWORD`), loaded from a local
   `.env.development` (not versioned, via `dotenv-rails`), with `CENTRAL_DB_NAME` defaulting to
-  `central` — there's no hardcoded local dev database name (`config/database.yml`).
+  `distrititulos` — there's no hardcoded local dev database name (`config/database.yml`).
 - Test database name is fixed: `distrititulos_test`.
 - Data-only maintenance done directly on the database (not expressible as a versioned
   migration, since there are none) is logged in `docs/manutencao_dados.md` — check it before

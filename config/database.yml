@@ -22,7 +22,7 @@ default: &default
 
 development:
   <<: *default
-  database: <%= ENV.fetch("CENTRAL_DB_NAME", "central") %>
+  database: <%= ENV.fetch("CENTRAL_DB_NAME", "distrititulos") %>
   host: <%= ENV["CENTRAL_DB_HOST"] %>
   port: <%= ENV["CENTRAL_DB_PORT"] %>
   username: <%= ENV["CENTRAL_DB_USER"] %>
